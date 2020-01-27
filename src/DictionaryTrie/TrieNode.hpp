@@ -27,12 +27,11 @@ class TrieNode {
     int getFreq() { return freq; }
 
     TrieNode* nextNode(const char& d) {
-        if (int(d) == int(data)) {
+        if (d == data) {
             return middle;
         }
 
-        return (int(d) < int(data)) ? left : right;
-        // return new TrieNode('a');
+        return (d < data) ? left : right;
     }
 };
 

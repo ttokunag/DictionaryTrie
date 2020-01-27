@@ -27,15 +27,21 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
     while (currIndex < word.size()) {
         if (currNode == nullptr) {
             currNode = new TrieNode(word.at(currIndex));
+            if (currIndex == word.size() - 1) {
+                currNode->setFreq(freq);
+            }
         } else {
-            currNode = currNode->nextNode(word.at(currIndex));
-            std::cout << "printed?" << std::endl;
+            if (currIndex == word.size() - 1 &&
+                word.at(currIndex) == currNode->getData()) {
+                currNode->setFreq(freq);
+            } else {
+                currNode = currNode->nextNode(word.at(currIndex));
+            }
         }
 
         ++currIndex;
     }
 
-    // currNode->setFreq(freq);
     return true;
 }
 
