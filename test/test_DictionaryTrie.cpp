@@ -25,3 +25,7 @@ TEST(DictTrieTests, EMPTY_TEST) {
 }
 
 /* TODO */
+TEST(DictTrieTests, INSERT_TEST) {
+    DictionaryTrie dict;
+    ASSERT_EQ(dict.insert("apple", 1), true);
+}
