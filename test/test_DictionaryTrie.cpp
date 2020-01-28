@@ -29,13 +29,19 @@ TEST(DictTrieTests, INSERT_TEST) {
     DictionaryTrie dict;
     ASSERT_EQ(dict.insert("apple", 1), true);
     ASSERT_EQ(dict.insert("ape", 2), true);
-    ASSERT_EQ(dict.insert("ape", 2), false);
+    ASSERT_EQ(dict.insert("apa", 2), true);
 }
 
-// TEST(DictTrieTests, FIND_TEST) {
-//     DictionaryTrie dict;
+TEST(DictTrieTests, FIND_TEST) {
+    DictionaryTrie dict;
 
-//     dict.insert("apple", 1);
+    dict.insert("apple", 1);
+    dict.insert("ape", 2);
+    dict.insert("apa", 2);
 
-//     ASSERT_EQ(dict.find("apple"), true);
-// }
+    ASSERT_EQ(dict.find("apple"), true);
+    ASSERT_EQ(dict.find("ape"), true);
+    ASSERT_EQ(dict.find("apa"), true);
+    ASSERT_EQ(dict.find("apb"), false);
+    ASSERT_EQ(dict.find("app"), false);
+}

@@ -13,8 +13,14 @@ class TrieNode {
     TrieNode* middle;
     TrieNode* right;
 
-    TrieNode(const char& letter) {
-        data = letter;
+    // TrieNode(const char& letter) {
+    //     data = letter;
+    //     freq = 0;
+    //     left = middle = right = nullptr;
+    // }
+
+    TrieNode() {
+        data = '\0';
         freq = 0;
         left = middle = right = nullptr;
     }
@@ -28,19 +34,22 @@ class TrieNode {
     int getFreq() { return freq; }
 
     TrieNode* nextNode(const char& d) {
-        if (middle == nullptr || d == data) {
+        if (d == data) {
             if (middle == nullptr) {
-                middle = new TrieNode(d);
+                middle = new TrieNode();
+                middle->setData(d);
             }
             return middle;
         } else if (d < data) {
             if (left == nullptr) {
-                left = new TrieNode(d);
+                left = new TrieNode();
+                left->setData(d);
             }
             return left;
         } else {
             if (right == nullptr) {
-                right = new TrieNode(d);
+                right = new TrieNode();
+                right->setData(d);
             }
             return right;
         }
