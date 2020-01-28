@@ -20,9 +20,11 @@ using namespace std;
 class DictionaryTrie {
   private:
     // TODO: add private members and helper methods here
-    TrieNode* root;
+    // TrieNode* root;
 
   public:
+    TrieNode* root;
+
     /* TODO: add function header */
     DictionaryTrie();
 
@@ -42,6 +44,8 @@ class DictionaryTrie {
 
     /* TODO: add function header */
     ~DictionaryTrie();
+
+    void printFirstWord();
 };
 
 #endif  // DICTIONARY_TRIE_HPP

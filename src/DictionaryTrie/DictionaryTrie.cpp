@@ -9,40 +9,41 @@
 /* TODO */
 DictionaryTrie::DictionaryTrie() { root = nullptr; }
 
+void DictionaryTrie::printFirstWord() {
+    TrieNode* node = root;
+
+    while (node != nullptr) {
+        std::cout << node->getData() << std::endl;
+    }
+}
+
 /* TODO */
 bool DictionaryTrie::insert(string word, unsigned int freq) {
-    // an index which points to each character of a given word
-    int currIndex = 0;
+    // an index pointing a letter of a given word;
+    int letterIndex = 0;
+    // a node we are currently at
+    TrieNode* node = root;
 
-    if (root == nullptr) {
-        // set a root node
-        root = new TrieNode(word.at(currIndex++));
-        if (word.size() == 1) {
-            root->setFreq(freq);
-        }
-    }
+    // iterate until reaching the last letter of a given word
+    while (letterIndex < word.size()) {
+        char letter = word.at(letterIndex);
 
-    TrieNode* currNode = root;
-
-    while (currIndex < word.size()) {
-        if (currNode == nullptr) {
-            currNode = new TrieNode(word.at(currIndex));
-            if (currIndex == word.size() - 1) {
-                currNode->setFreq(freq);
-            }
-        } else {
-            if (currIndex == word.size() - 1 &&
-                word.at(currIndex) == currNode->getData()) {
-                currNode->setFreq(freq);
-            } else {
-                currNode = currNode->nextNode(word.at(currIndex));
-            }
+        if (root == nullptr) {  // when a root is empty
+            root = new TrieNode(letter);
+            node = root;
         }
 
-        ++currIndex;
+        else {
+            // the next node to go based on a current letter
+            TrieNode* next = node->nextNode(letter);
+
+            node = next;
+        }
+
+        letterIndex++;
     }
 
-    return true;
+    return false;
 }
 
 /* TODO */
