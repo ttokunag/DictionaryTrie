@@ -9,14 +9,6 @@
 /* TODO */
 DictionaryTrie::DictionaryTrie() { root = nullptr; }
 
-void DictionaryTrie::printFirstWord() {
-    TrieNode* node = root;
-
-    while (node != nullptr) {
-        std::cout << node->getData() << std::endl;
-    }
-}
-
 /* TODO */
 bool DictionaryTrie::insert(string word, unsigned int freq) {
     // an index pointing a letter of a given word;
@@ -30,14 +22,10 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         root = new TrieNode(word.at(letterIndex++));
         node = root;
 
-        for (int i = letterIndex; i < word.size(); i++) {
-            // keeps going down a middle node
-            node->middle = new TrieNode(word.at(i));
-            node = node->middle;
-        }
+        TrieNode* lastNode = placeAllOnMiddleLine(word, letterIndex, node);
 
         // set a frequency of a word in a destination node
-        node->setFreq(freq);
+        lastNode->setFreq(freq);
         return true;
     }
 
@@ -53,7 +41,14 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                 // when a left node hasn't been set yet
                 if (node->left == nullptr) {
                     node->left = new TrieNode(letter);
-                    letterIndex++;
+                    node = node->left;
+                    TrieNode* lastNode =
+                        placeAllOnMiddleLine(word, letterIndex + 1, node);
+
+                    lastNode->setFreq(freq);
+
+                    return true;
+                    // letterIndex++;
                 }
                 node = node->left;
             }
@@ -62,23 +57,31 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                 // when a right node hasn't been set yet
                 if (node->right == nullptr) {
                     node->right = new TrieNode(letter);
-                    letterIndex++;
+                    node = node->right;
+
+                    TrieNode* lastNode =
+                        placeAllOnMiddleLine(word, letterIndex + 1, node);
+
+                    lastNode->setFreq(freq);
+
+                    // letterIndex++;
+                    return true;
                 }
                 node = node->right;
             }
         }
     }
 
-    // determine if a given word is already inserted by inspecting if a
-    // destination node is already set a frequency
-    if (node->getFreq() > 0) {
-        return false;
-    }
+    // // determine if a given word is already inserted by inspecting if a
+    // // destination node is already set a frequency
+    // if (node->getFreq() > 0) {
+    //     return false;
+    // }
 
-    // set a frequency of a word
-    node->setFreq(freq);
+    // // set a frequency of a word
+    // node->setFreq(freq);
 
-    return true;
+    return false;
 }
 
 /* TODO */
@@ -146,4 +149,15 @@ void DictionaryTrie::deleteAll(TrieNode* node) {
     delete node->left;
     delete node->middle;
     delete node->right;
+}
+
+TrieNode* DictionaryTrie::placeAllOnMiddleLine(string str, int index,
+                                               TrieNode* node) {
+    for (int i = index; i < str.size(); i++) {
+        // keeps going down a middle node
+        node->middle = new TrieNode(str.at(i));
+        node = node->middle;
+    }
+
+    return node;
 }

@@ -45,9 +45,9 @@ class DictionaryTrie {
     /* TODO: add function header */
     ~DictionaryTrie();
 
-    void printFirstWord();
-
     void deleteAll(TrieNode* node);
+
+    TrieNode* placeAllOnMiddleLine(string str, int index, TrieNode* node);
 };
 
 #endif  // DICTIONARY_TRIE_HPP
