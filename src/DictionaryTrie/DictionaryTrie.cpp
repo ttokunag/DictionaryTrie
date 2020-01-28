@@ -26,16 +26,17 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
     // when a root is empty
     if (root == nullptr) {
-        root = new TrieNode();
-        root->setData(word.at(letterIndex++));
+        // initializes a root node
+        root = new TrieNode(word.at(letterIndex++));
         node = root;
 
         for (int i = letterIndex; i < word.size(); i++) {
-            node->middle = new TrieNode();
-            node->middle->setData(word.at(i));
+            // keeps going down a middle node
+            node->middle = new TrieNode(word.at(i));
             node = node->middle;
         }
 
+        // set a frequency of a word in a destination node
         node->setFreq(freq);
         return true;
     }
@@ -47,17 +48,18 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
             node = node->middle;
             letterIndex++;
         } else {
-            if (letter < node->getData()) {  // a letter is smaller
+            // when a letter is smaller than a current node letter
+            if (letter < node->getData()) {
                 if (node->left == nullptr) {
-                    node->left = new TrieNode();
-                    node->left->setData(letter);
+                    node->left = new TrieNode(letter);
                     letterIndex++;
                 }
                 node = node->left;
-            } else {  // a letter is larger
+            }
+            // when a letter is larger than a current node letter
+            else {
                 if (node->right == nullptr) {
-                    node->right = new TrieNode();
-                    node->right->setData(letter);
+                    node->right = new TrieNode(letter);
                     letterIndex++;
                 }
                 node = node->right;
@@ -65,10 +67,13 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         }
     }
 
+    // determine if a given word is already inserted by inspecting if a
+    // destination node is already set a frequency
     if (node->getFreq() > 0) {
         return false;
     }
 
+    // set a frequency of a word
     node->setFreq(freq);
 
     return true;
@@ -89,13 +94,19 @@ bool DictionaryTrie::find(string word) const {
 
         if (letter == nodeLetter) {
             letterIndex++;
+            // detects a substring of an inserted word which is not inserted
+            // ex) avoid returning true for "app" after inserting only "apple"
             if (letterIndex == word.size() && node->getFreq() == 0) {
                 return false;
             }
             node = node->middle;
-        } else if (letter < nodeLetter) {
+        }
+        // when a letter is smaller than a node letter
+        else if (letter < nodeLetter) {
             node = node->left;
-        } else {
+        }
+        // when a letter is larger than a node letter
+        else {
             node = node->right;
         }
     }
