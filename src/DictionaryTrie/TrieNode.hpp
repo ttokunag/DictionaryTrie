@@ -15,7 +15,7 @@ class TrieNode {
 
     TrieNode(const char& letter) {
         data = letter;
-        freq = NULL;
+        freq = 0;
         left = middle = right = nullptr;
     }
 

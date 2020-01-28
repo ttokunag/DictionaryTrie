@@ -36,14 +36,19 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         else {
             // the next node to go based on a current letter
             TrieNode* next = node->nextNode(letter);
-
+            // set a current node to the next node
             node = next;
         }
 
         letterIndex++;
     }
 
-    return false;
+    if (node->getFreq() > 0) {
+        return false;
+    }
+
+    node->setFreq(freq);
+    return true;
 }
 
 /* TODO */
