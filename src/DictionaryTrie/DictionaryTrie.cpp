@@ -50,6 +50,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         } else {
             // when a letter is smaller than a current node letter
             if (letter < node->getData()) {
+                // when a left node hasn't been set yet
                 if (node->left == nullptr) {
                     node->left = new TrieNode(letter);
                     letterIndex++;
@@ -58,6 +59,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
             }
             // when a letter is larger than a current node letter
             else {
+                // when a right node hasn't been set yet
                 if (node->right == nullptr) {
                     node->right = new TrieNode(letter);
                     letterIndex++;
@@ -127,4 +129,21 @@ std::vector<string> DictionaryTrie::predictUnderscores(
 }
 
 /* TODO */
-DictionaryTrie::~DictionaryTrie() {}
+DictionaryTrie::~DictionaryTrie() {
+    deleteAll(root);
+    delete root;
+}
+
+void DictionaryTrie::deleteAll(TrieNode* node) {
+    if (node == nullptr) {
+        return;
+    }
+
+    deleteAll(node->left);
+    deleteAll(node->middle);
+    deleteAll(node->right);
+
+    delete node->left;
+    delete node->middle;
+    delete node->right;
+}

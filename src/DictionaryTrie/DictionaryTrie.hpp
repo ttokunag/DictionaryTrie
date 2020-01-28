@@ -46,6 +46,8 @@ class DictionaryTrie {
     ~DictionaryTrie();
 
     void printFirstWord();
+
+    void deleteAll(TrieNode* node);
 };
 
 #endif  // DICTIONARY_TRIE_HPP

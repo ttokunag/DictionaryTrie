@@ -13,12 +13,6 @@ class TrieNode {
     TrieNode* middle;
     TrieNode* right;
 
-    // TrieNode(const char& letter) {
-    //     data = letter;
-    //     freq = 0;
-    //     left = middle = right = nullptr;
-    // }
-
     TrieNode(const char& letter) {
         data = letter;
         freq = 0;
