@@ -128,10 +128,13 @@ DictionaryTrie::~DictionaryTrie() {
 }
 
 void DictionaryTrie::deleteAll(TrieNode* node) {
+    // base case when a node is nothing
     if (node == nullptr) {
         return;
     }
 
+    // recursively call itself and free memories allocated for a left, middle,
+    // and right child node
     deleteAll(node->left);
     deleteAll(node->middle);
     deleteAll(node->right);
