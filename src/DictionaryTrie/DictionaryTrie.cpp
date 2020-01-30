@@ -117,14 +117,16 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 
     vector<pair<string, int>> vec;
 
-    TrieNode* lastPrefixNode = endOfPrefixNode(prefix, 0, root);
+    TrieNode* lastPrefixNode =
+        (prefix.size() != 0) ? endOfPrefixNode(prefix, 0, root) : root;
     // include a given prefix in a prediction if necessary
     if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
         // result.push_back(prefix);
         vec.push_back(pair<string, int>(prefix, lastPrefixNode->getFreq()));
     }
 
-    TrieNode* rootForSearch = lastPrefixNode->middle;
+    TrieNode* rootForSearch =
+        (prefix.size() != 0) ? lastPrefixNode->middle : root;
 
     dfsForPredictCompletion(rootForSearch, prefix, &vec, 0, numCompletions);
 
