@@ -54,8 +54,7 @@ class DictionaryTrie {
     TrieNode* createMiddleLine(string str, int index, TrieNode* node);
 
     void completionHelper(TrieNode* root, string prefix,
-                          vector<pair<string, int>>* vec, int minFreq,
-                          int numCompletions);
+                          vector<pair<string, int>>* vec, int numCompletions);
 };
 
 #endif  // DICTIONARY_TRIE_HPP

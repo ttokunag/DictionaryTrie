@@ -165,7 +165,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
     }
     TrieNode* dfsRoot = (prefix.size() != 0) ? lastPrefixNode->middle : root;
     // DFS to find most frequent words
-    completionHelper(dfsRoot, prefix, &wordFreqPairs, 0, numCompletions);
+    completionHelper(dfsRoot, prefix, &wordFreqPairs, numCompletions);
 
     // a vector which contains words most frequently used
     vector<string> result;
@@ -208,7 +208,7 @@ TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
 
 void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
                                       vector<pair<string, int>>* result,
-                                      int minFreq, int numCompletions) {
+                                      int numCompletions) {
     // base case
     if (root == nullptr) {
         return;
@@ -274,18 +274,14 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
                         result->push_back(pair<string, int>(currStr, freq));
                     }
                 }
-
-                // update the least frequency if a current word is it
-                minFreq = (minFreq > freq) ? minFreq : freq;
             }
         }
     }
 
     // recursive phase: left -> middle -> right
-    completionHelper(root->left, prefix, result, minFreq, numCompletions);
-    completionHelper(root->middle, prefix + letter, result, minFreq,
-                     numCompletions);
-    completionHelper(root->right, prefix, result, minFreq, numCompletions);
+    completionHelper(root->left, prefix, result, numCompletions);
+    completionHelper(root->middle, prefix + letter, result, numCompletions);
+    completionHelper(root->right, prefix, result, numCompletions);
 }
 /* TODO */
 std::vector<string> DictionaryTrie::predictUnderscores(
