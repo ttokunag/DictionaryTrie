@@ -29,6 +29,9 @@ class DictionaryTrie {
     void completionHelper(TrieNode* root, string prefix,
                           vector<pair<string, int>>* vec, int numCompletions);
 
+    void insertInCorrectPlace(vector<pair<string, int>>* pairs, string word,
+                              int freq);
+
   public:
     /* TODO: add function header */
     DictionaryTrie();

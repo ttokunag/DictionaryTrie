@@ -237,31 +237,8 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
 
             // if a vector still has capacity, then add
             if (result->size() < numCompletions) {
-                int vecSize = result->size();
-                // insert a new word to a result vector
-                for (int i = 0; i < vecSize; i++) {
-                    // a current pair we need to compare
-                    pair<string, int> curr = result->at(i);
-                    // insert a pair into an appropriate position
-                    if (freq > curr.second) {
-                        result->insert(result->begin() + i,
-                                       pair<string, int>(currStr, freq));
-                        break;
-                    }
-                    // when there exists a word with the same frequency
-                    else if (freq == curr.second) {
-                        // a word alphabetially earlier should come first
-                        if (currStr < curr.first) {
-                            result->insert(result->begin() + i,
-                                           pair<string, int>(currStr, freq));
-                            break;
-                        }
-                    }
-                    // when a current word is least frequent in a vector
-                    if (i == vecSize - 1) {
-                        result->push_back(pair<string, int>(currStr, freq));
-                    }
-                }
+                // isnert a current prefix to a result vector
+                insertInCorrectPlace(result, currStr, freq);
             }
         }
     }
@@ -312,3 +289,31 @@ TrieNode* DictionaryTrie::createMiddleLine(string str, int index,
 }
 
 TrieNode* DictionaryTrie::getRoot() { return root; }
+
+void DictionaryTrie::insertInCorrectPlace(vector<pair<string, int>>* pairs,
+                                          string word, int freq) {
+    int vecSize = pairs->size();
+    // insert a new word to a result vector
+    for (int i = 0; i < vecSize; i++) {
+        // a current pair we need to compare
+        pair<string, int> curr = pairs->at(i);
+        // insert a pair into an appropriate position
+        if (freq > curr.second) {
+            pairs->insert(pairs->begin() + i, pair<string, int>(word, freq));
+            break;
+        }
+        // when there exists a word with the same frequency
+        else if (freq == curr.second) {
+            // a word alphabetially earlier should come first
+            if (word < curr.first) {
+                pairs->insert(pairs->begin() + i,
+                              pair<string, int>(word, freq));
+                break;
+            }
+        }
+        // when a current word is least frequent in a vector
+        if (i == vecSize - 1) {
+            pairs->push_back(pair<string, int>(word, freq));
+        }
+    }
+}
