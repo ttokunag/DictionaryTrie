@@ -222,16 +222,10 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
             if (size == numCompletions) {
                 pair<string, int> last = result->at(numCompletions - 1);
 
-                // when a current prefix is more frequent
-                if (freq > last.second) {
+                // when a current prefix is more or equal to frequent
+                if (freq > last.second ||
+                    (freq == last.second && currStr < last.first)) {
                     result->pop_back();
-                }
-                // when a current prefix has the same frequency
-                else if (freq == last.second) {
-                    // when a currStr comes earlier
-                    if (currStr < last.first) {
-                        result->pop_back();
-                    }
                 }
             }
 
