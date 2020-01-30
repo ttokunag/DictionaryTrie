@@ -46,16 +46,8 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
             }
 
             if (node->middle == nullptr) {
-                char newLetter = word.at(++letterIndex);
-                node->middle = new TrieNode(newLetter);
-                node = node->middle;
-
-                // a last node for a last letter of a given word
-                TrieNode* lastNode =
-                    createMiddleLine(word, letterIndex + 1, node);
-
-                lastNode->setFreq(freq);
-
+                // add new Trie nodes
+                letterIndex = addNewNodes(node, 1, word, freq, letterIndex);
                 return true;
             }
 
@@ -65,14 +57,8 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         // when a current letter is smaller than a node letter
         else if (letter < nodeLetter) {
             if (node->left == nullptr) {
-                node->left = new TrieNode(letter);
-                node = node->left;
-
-                // a last node for a last letter of a given word
-                TrieNode* lastNode =
-                    createMiddleLine(word, letterIndex + 1, node);
-
-                lastNode->setFreq(freq);
+                // add new Trie nodes
+                letterIndex = addNewNodes(node, 0, word, freq, letterIndex);
                 return true;
             }
             node = node->left;
@@ -81,13 +67,8 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         else {
             // when a right node hasn't been set yet
             if (node->right == nullptr) {
-                node->right = new TrieNode(letter);
-                node = node->right;
-
-                TrieNode* lastNode =
-                    createMiddleLine(word, letterIndex + 1, node);
-
-                lastNode->setFreq(freq);
+                // add new Trie nodes
+                letterIndex = addNewNodes(node, 2, word, freq, letterIndex);
                 return true;
             }
             node = node->right;
@@ -309,5 +290,46 @@ void DictionaryTrie::insertInCorrectPlace(vector<pair<string, int>>* pairs,
         if (i == vecSize - 1) {
             pairs->push_back(pair<string, int>(word, freq));
         }
+    }
+}
+
+int DictionaryTrie::addNewNodes(TrieNode* node, int flag, string word, int freq,
+                                int letterIndex) {
+    switch (flag) {
+        case 0: {
+            node->left = new TrieNode(word.at(letterIndex));
+            node = node->left;
+
+            // a last node for a last letter of a given word
+            TrieNode* lastNode = createMiddleLine(word, letterIndex + 1, node);
+
+            lastNode->setFreq(freq);
+            return letterIndex;
+        }
+
+        case 1: {
+            char newLetter = word.at(++letterIndex);
+            node->middle = new TrieNode(newLetter);
+            node = node->middle;
+
+            // a last node for a last letter of a given word
+            TrieNode* lastNode = createMiddleLine(word, letterIndex + 1, node);
+
+            lastNode->setFreq(freq);
+            return letterIndex;
+        }
+
+        case 2: {
+            node->right = new TrieNode(word.at(letterIndex));
+            node = node->right;
+
+            TrieNode* lastNode = createMiddleLine(word, letterIndex + 1, node);
+
+            lastNode->setFreq(freq);
+            return letterIndex;
+        }
+
+        default:
+            return 0;
     }
 }

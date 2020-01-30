@@ -32,6 +32,9 @@ class DictionaryTrie {
     void insertInCorrectPlace(vector<pair<string, int>>* pairs, string word,
                               int freq);
 
+    int addNewNodes(TrieNode* node, int flag, string word, int freq,
+                     int letterIndex);
+
   public:
     /* TODO: add function header */
     DictionaryTrie();
