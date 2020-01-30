@@ -43,12 +43,18 @@ TEST(DictTrieTests, INSERT_TEST) {
 TEST(DictTrieTests, FULL_TEST) {
     DictionaryTrie dict;
 
+    dict.insert("a", 1);
+    dict.insert("a a", 1);
+
     ASSERT_EQ(dict.insert("pain", 1), true);
     ASSERT_EQ(dict.insert("lol", 2), true);
     ASSERT_EQ(dict.insert("pls", 2), true);
     ASSERT_EQ(dict.insert("goal", 2), true);
     ASSERT_EQ(dict.insert("rick", 2), true);
     ASSERT_EQ(dict.insert("richard", 2), true);
+
+    // false test for insert()
+    ASSERT_EQ(dict.insert("richard", 2), false);
 
     ASSERT_EQ(dict.find("pain"), true);
     ASSERT_EQ(dict.find("lol"), true);
@@ -57,6 +63,7 @@ TEST(DictTrieTests, FULL_TEST) {
     ASSERT_EQ(dict.find("rick"), true);
     ASSERT_EQ(dict.find("richard"), true);
 
+    // false test for find()
     ASSERT_EQ(dict.find("pa"), false);
 }
 
@@ -81,12 +88,28 @@ TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     dict.insert("apple", 143);
     dict.insert("ap", 143);
     dict.insert("book", 600);
-    dict.insert("ape", 143);
+    dict.insert("ape", 144);
 
-    vector<string> prediction = dict.predictCompletions("a", 3);
-    string tests[3] = {"ap", "ape", "apple"};
+    vector<string> prediction = dict.predictCompletions("ap", 3);
+    string tests[3] = {"ape", "ap", "apple"};
     for (int i = 0; i < prediction.size(); i++) {
         cout << prediction.at(i) << endl;
         ASSERT_EQ(prediction.at(i), tests[i]);
     }
+
+    vector<string> test = dict.predictCompletions("and", 3);
+}
+
+TEST(DictTrieTests, END_OF_PREFIX_TEST) {
+    DictionaryTrie dict;
+    dict.insert("apple", 143);
+    dict.insert("ap", 143);
+    dict.insert("book", 600);
+    dict.insert("ape", 144);
+
+    TrieNode* coNode = dict.endOfPrefixNode("co", 0, dict.getRoot());
+    TrieNode* apNode = dict.endOfPrefixNode("ap", 0, dict.getRoot());
+
+    ASSERT_EQ(coNode, nullptr);
+    ASSERT_EQ(apNode->getData(), 'p');
 }

@@ -22,16 +22,6 @@ class DictionaryTrie {
     // TODO: add private members and helper methods here
     TrieNode* root;
 
-    void deleteAll(TrieNode* node);
-
-    TrieNode* createMiddleLine(string str, int index, TrieNode* node);
-
-    TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
-
-    void completionHelper(TrieNode* root, string prefix,
-                          vector<pair<string, int>>* vec, int minFreq,
-                          int numCompletions);
-
   public:
     /* TODO: add function header */
     DictionaryTrie();
@@ -52,6 +42,18 @@ class DictionaryTrie {
 
     /* TODO: add function header */
     ~DictionaryTrie();
+
+    TrieNode* getRoot();
+
+    TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
+
+    void deleteAll(TrieNode* node);
+
+    TrieNode* createMiddleLine(string str, int index, TrieNode* node);
+
+    void completionHelper(TrieNode* root, string prefix,
+                          vector<pair<string, int>>* vec, int minFreq,
+                          int numCompletions);
 };
 
 #endif  // DICTIONARY_TRIE_HPP

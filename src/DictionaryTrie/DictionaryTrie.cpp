@@ -41,6 +41,20 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                 node->setFreq(freq);
                 return true;
             }
+
+            if (node->middle == nullptr) {
+                node->middle = new TrieNode(letter);
+                node = node->middle;
+
+                // a last node for a last letter of a given word
+                TrieNode* lastNode =
+                    createMiddleLine(word, letterIndex + 1, node);
+
+                lastNode->setFreq(freq);
+
+                return true;
+            }
+
             node = node->middle;
             letterIndex++;
         } else {
@@ -79,7 +93,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
             }
         }
     }
-    return false;
 }
 
 /* TODO */
@@ -135,6 +148,9 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
     }
 
     // a node which is used as a root for searching
+    if (lastPrefixNode == nullptr) {
+        return {};
+    }
     TrieNode* dfsRoot = (prefix.size() != 0) ? lastPrefixNode->middle : root;
     // DFS to find most frequent words
     completionHelper(dfsRoot, prefix, &wordFreqPairs, 0, numCompletions);
@@ -208,7 +224,8 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
                 minFreq = result->end()->second;
             }
 
-            for (int i = 0; i < size; i++) {
+            // insert a new word to a result vector
+            for (int i = 0; i < result->size(); i++) {
                 pair<string, int> curr = result->at(i);
                 // insert a pair into an appropriate position
                 if (freq > curr.second) {
@@ -280,3 +297,5 @@ TrieNode* DictionaryTrie::createMiddleLine(string str, int index,
 
     return node;
 }
+
+TrieNode* DictionaryTrie::getRoot() { return root; }
