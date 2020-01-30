@@ -112,16 +112,12 @@ bool DictionaryTrie::find(string word) const {
 /* TODO */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
-    // a vector which contains predictions
-    // vector<string> result;
-
     vector<pair<string, int>> vec;
 
     TrieNode* lastPrefixNode =
         (prefix.size() != 0) ? endOfPrefixNode(prefix, 0, root) : root;
     // include a given prefix in a prediction if necessary
     if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
-        // result.push_back(prefix);
         vec.push_back(pair<string, int>(prefix, lastPrefixNode->getFreq()));
     }
 
@@ -165,22 +161,6 @@ TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
     else {
         return endOfPrefixNode(prefix, index, node->right);
     }
-}
-
-void DictionaryTrie::dfsForPredictCompletion(TrieNode* root, string prefix,
-                                             vector<string>* result) {
-    if (root == nullptr) {
-        return;
-    }
-
-    char letter = root->getData();
-    if (root->getFreq() > 0) {
-        result->push_back(prefix + letter);
-    }
-
-    dfsForPredictCompletion(root->left, prefix, result);
-    dfsForPredictCompletion(root->middle, prefix + letter, result);
-    dfsForPredictCompletion(root->right, prefix, result);
 }
 
 void DictionaryTrie::dfsForPredictCompletion(TrieNode* root, string prefix,
@@ -270,10 +250,4 @@ TrieNode* DictionaryTrie::placeAllOnMiddleLine(string str, int index,
     }
 
     return node;
-}
-
-void DictionaryTrie::swap(pair<string, int>* arr, int i, int j) {
-    pair<string, int> temp(arr->first, arr->second);
-    arr[i] = arr[j];
-    arr[j] = temp;
 }

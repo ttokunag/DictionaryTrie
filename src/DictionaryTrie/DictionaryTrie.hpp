@@ -52,11 +52,6 @@ class DictionaryTrie {
     TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
 
     void dfsForPredictCompletion(TrieNode* root, string prefix,
-                                 vector<string>* result);
-
-    void swap(pair<string, int>* arr, int i, int j);
-
-    void dfsForPredictCompletion(TrieNode* root, string prefix,
                                  vector<pair<string, int>>* vec, int minFreq,
                                  int numCompletions);
 };
