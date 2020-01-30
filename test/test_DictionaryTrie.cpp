@@ -91,13 +91,14 @@ TEST(DictTrieTests, END_OF_PREFIX_TEST) {
 
 TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     DictionaryTrie dict;
-    dict.insert("apple", 1);
-    dict.insert("book", 1);
-    dict.insert("ape", 1);
+    dict.insert("apple", 143);
+    dict.insert("book", 600);
+    dict.insert("ape", 13);
 
-    vector<string>* vec = new vector<string>();
+    // vector<string>* vec = new vector<string>();
+    vector<pair<string, int>>* vec = new vector<pair<string, int>>();
 
-    dict.dfsForPredictCompletion(dict.root, "", vec);
+    dict.dfsForPredictCompletion(dict.root, "", vec, 0, 3);
 
     ASSERT_NE(vec->size(), 0);
 }

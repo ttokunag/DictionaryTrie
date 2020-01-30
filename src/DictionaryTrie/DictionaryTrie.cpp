@@ -113,16 +113,23 @@ bool DictionaryTrie::find(string word) const {
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
     // a vector which contains predictions
-    vector<string> result;
+    // vector<string> result;
+
+    vector<pair<string, int>> vec;
 
     TrieNode* lastPrefixNode = endOfPrefixNode(prefix, 0, root);
+    // include a given prefix in a prediction if necessary
     if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
-        result.push_back(prefix);
+        // result.push_back(prefix);
+        vec.push_back(pair<string, int>(prefix, lastPrefixNode->getFreq()));
     }
 
     TrieNode* rootForSearch = lastPrefixNode->middle;
 
-    return result;
+    dfsForPredictCompletion(rootForSearch, "", &vec, 0, numCompletions);
+
+    // return result;
+    return vector<string>();
 }
 
 TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
@@ -170,6 +177,55 @@ void DictionaryTrie::dfsForPredictCompletion(TrieNode* root, string prefix,
     dfsForPredictCompletion(root->right, prefix, result);
 }
 
+void DictionaryTrie::dfsForPredictCompletion(TrieNode* root, string prefix,
+                                             vector<pair<string, int>>* vec,
+                                             int minFreq, int numCompletions) {
+    if (root == nullptr) {
+        return;
+    }
+
+    char letter = root->getData();
+    int freq = root->getFreq();
+    if (freq > minFreq) {
+        int size = vec->size();
+
+        if (size == 0) {
+            vec->push_back(pair<string, int>(prefix + letter, freq));
+            minFreq = freq;
+        } else {
+            // remove the least frequent word if a vector is full
+            if (size == numCompletions) {
+                vec->pop_back();
+                // update the least frequency
+                minFreq = vec->end()->second;
+            }
+
+            bool inserted = false;
+            for (int i = 0; i < size; i++) {
+                // insert a pair into an appropriate position
+                if (freq >= vec->at(i).second) {
+                    vec->insert(vec->begin() + i,
+                                pair<string, int>(prefix + letter, freq));
+                    inserted = true;
+                    break;
+                }
+            }
+
+            // when a given prefix is least frequent
+            if (!inserted) {
+                vec->push_back(pair<string, int>(prefix + letter, freq));
+            }
+
+            // update the least frequency if a current word is it
+            minFreq = (minFreq > freq) ? minFreq : freq;
+        }
+    }
+
+    dfsForPredictCompletion(root->left, prefix, vec, minFreq, numCompletions);
+    dfsForPredictCompletion(root->middle, prefix + letter, vec, minFreq,
+                            numCompletions);
+    dfsForPredictCompletion(root->right, prefix, vec, minFreq, numCompletions);
+}
 /* TODO */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
@@ -188,8 +244,8 @@ void DictionaryTrie::deleteAll(TrieNode* node) {
         return;
     }
 
-    // recursively call itself and free memories allocated for a left, middle,
-    // and right child node
+    // recursively call itself and free memories allocated for a left,
+    // middle, and right child node
     deleteAll(node->left);
     deleteAll(node->middle);
     deleteAll(node->right);
@@ -208,4 +264,10 @@ TrieNode* DictionaryTrie::placeAllOnMiddleLine(string str, int index,
     }
 
     return node;
+}
+
+void DictionaryTrie::swap(pair<string, int>* arr, int i, int j) {
+    pair<string, int> temp(arr->first, arr->second);
+    arr[i] = arr[j];
+    arr[j] = temp;
 }
