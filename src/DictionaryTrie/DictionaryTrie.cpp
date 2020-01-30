@@ -7,11 +7,7 @@
 #include <iostream>
 
 /* TODO */
-DictionaryTrie::DictionaryTrie() {
-    root = nullptr;
-    trieSize = 0;
-    visited = 0;
-}
+DictionaryTrie::DictionaryTrie() { root = nullptr; }
 
 /* TODO */
 bool DictionaryTrie::insert(string word, unsigned int freq) {
@@ -30,7 +26,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
         // set a frequency of a word in a destination node
         lastNode->setFreq(freq);
-        trieSize++;
         return true;
     }
 
@@ -46,7 +41,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                 }
                 // otherwise mark a node by setting a node's frequency
                 node->setFreq(freq);
-                trieSize++;
                 return true;
             }
 
@@ -61,7 +55,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
                 lastNode->setFreq(freq);
 
-                trieSize++;
                 return true;
             }
 
@@ -81,7 +74,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
                     lastNode->setFreq(freq);
 
-                    trieSize++;
                     return true;
                 }
                 node = node->left;
@@ -98,7 +90,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
                     lastNode->setFreq(freq);
 
-                    trieSize++;
                     return true;
                 }
                 node = node->right;
