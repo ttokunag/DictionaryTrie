@@ -21,6 +21,8 @@ class DictionaryTrie {
   private:
     // TODO: add private members and helper methods here
     TrieNode* root;
+    int trieSize;
+    int visited;
 
   public:
     /* TODO: add function header */

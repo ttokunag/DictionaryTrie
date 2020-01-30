@@ -46,12 +46,12 @@ bool fileValid(const char* fileName) {
  */
 int main(int argc, char** argv) {
     const int NUM_ARG = 2;
-    if (argc != NUM_ARG) {
-        cout << "Invalid number of arguments.\n"
-             << "Usage: ./autocomplete <dictionary filename>" << endl;
-        return -1;
-    }
-    if (!fileValid(argv[1])) return -1;
+    // if (argc != NUM_ARG) {
+    //     cout << "Invalid number of arguments.\n"
+    //          << "Usage: ./autocomplete <dictionary filename>" << endl;
+    //     return -1;
+    // }
+    // if (!fileValid(argv[1])) return -1;
 
     DictionaryTrie* dt = new DictionaryTrie();
 
@@ -59,7 +59,8 @@ int main(int argc, char** argv) {
     cout << "Reading file: " << argv[1] << endl;
 
     ifstream in;
-    in.open(argv[1], ios::binary);
+    // in.open(argv[1], ios::binary);
+    in.open("./data/short_dict.txt", ios::binary);
     string word;
 
     Utils::loadDict(*dt, in);

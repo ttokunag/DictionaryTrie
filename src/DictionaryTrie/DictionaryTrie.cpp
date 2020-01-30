@@ -7,7 +7,11 @@
 #include <iostream>
 
 /* TODO */
-DictionaryTrie::DictionaryTrie() { root = nullptr; }
+DictionaryTrie::DictionaryTrie() {
+    root = nullptr;
+    trieSize = 0;
+    visited = 0;
+}
 
 /* TODO */
 bool DictionaryTrie::insert(string word, unsigned int freq) {
@@ -26,6 +30,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
         // set a frequency of a word in a destination node
         lastNode->setFreq(freq);
+        trieSize++;
         return true;
     }
 
@@ -35,15 +40,19 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         // when a current node and a current letter match
         if (letter == nodeLetter) {
             if (letterIndex == word.size() - 1) {
+                // when a given word is already in a trie
                 if (node->getFreq() > 0) {
                     return false;
                 }
+                // otherwise mark a node by setting a node's frequency
                 node->setFreq(freq);
+                trieSize++;
                 return true;
             }
 
             if (node->middle == nullptr) {
-                node->middle = new TrieNode(letter);
+                char newLetter = word.at(++letterIndex);
+                node->middle = new TrieNode(newLetter);
                 node = node->middle;
 
                 // a last node for a last letter of a given word
@@ -52,6 +61,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
                 lastNode->setFreq(freq);
 
+                trieSize++;
                 return true;
             }
 
@@ -71,6 +81,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
                     lastNode->setFreq(freq);
 
+                    trieSize++;
                     return true;
                 }
                 node = node->left;
@@ -87,6 +98,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
                     lastNode->setFreq(freq);
 
+                    trieSize++;
                     return true;
                 }
                 node = node->right;
@@ -207,7 +219,8 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
 
     // nodes whose frequency is higher than a minimum frequency should be added
     // to a result vector
-    if (freq > minFreq) {
+    // if (freq > minFreq) {
+    if (freq > 0) {
         // a current size of the result vector
         int size = result->size();
         string currStr = prefix + letter;
@@ -215,40 +228,65 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
         // a node should be added when a vector is empty
         if (size == 0) {
             result->push_back(pair<string, int>(currStr, freq));
-        } else {
+        }
+        // whenever a vecter is nonempty
+        else {
             // remove the least frequent word if a vector is full
             if (size == numCompletions) {
-                // a last word is always least frequent in a vector
-                result->pop_back();
-                // update the least frequency
-                minFreq = result->end()->second;
+                // // a last word is always least frequent in a vector
+                // result->pop_back();
+                // // update the least frequency
+                // minFreq = result->end()->second;
+
+                // a word at the end of a vector is least frequent
+                pair<string, int> last = *(result->end());
+
+                // when a current prefix is more frequent
+                if (freq > last.second) {
+                    result->pop_back();
+                }
+                // when a current prefix has the same frequency
+                else if (freq == last.second) {
+                    // when a currStr comes earlier
+                    if (currStr < last.first) {
+                        result->pop_back();
+                    }
+                }
             }
 
-            // insert a new word to a result vector
-            for (int i = 0; i < result->size(); i++) {
-                pair<string, int> curr = result->at(i);
-                // insert a pair into an appropriate position
-                if (freq > curr.second) {
-                    result->insert(result->begin() + i,
-                                   pair<string, int>(currStr, freq));
-                    break;
-                } else if (freq == curr.second) {
-                    // when two words have equal frequency, a word which is
-                    // alphabetially earlier should come first
-                    if (currStr < curr.first) {
+            // if a vector still has capacity, then add
+            if (result->size() < numCompletions) {
+                int vecSize = result->size();
+                // insert a new word to a result vector
+                for (int i = 0; i < vecSize; i++) {
+                    // a current pair we need to compare
+                    pair<string, int> curr = result->at(i);
+                    // insert a pair into an appropriate position
+                    if (freq > curr.second) {
                         result->insert(result->begin() + i,
                                        pair<string, int>(currStr, freq));
                         break;
                     }
+                    // when there exists a word with the same frequency
+                    else if (freq == curr.second) {
+                        // a word which is alphabetially earlier should come
+                        // first
+                        if (currStr < curr.first) {
+                            result->insert(result->begin() + i,
+                                           pair<string, int>(currStr, freq));
+                            break;
+                        }
+                    }
+                    // when a current word is least frequent in a vector
+                    // if (i == size - 1) {
+                    if (i == vecSize - 1) {
+                        result->push_back(pair<string, int>(currStr, freq));
+                    }
                 }
-                // when a current word is least frequent in a vector
-                if (i == size - 1) {
-                    result->push_back(pair<string, int>(currStr, freq));
-                }
-            }
 
-            // update the least frequency if a current word is it
-            minFreq = (minFreq > freq) ? minFreq : freq;
+                // update the least frequency if a current word is it
+                minFreq = (minFreq > freq) ? minFreq : freq;
+            }
         }
     }
 
