@@ -42,13 +42,14 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                 if (node->left == nullptr) {
                     node->left = new TrieNode(letter);
                     node = node->left;
+
+                    // a last node for a last letter of a given word
                     TrieNode* lastNode =
                         createMiddleLine(word, letterIndex + 1, node);
 
                     lastNode->setFreq(freq);
 
                     return true;
-                    // letterIndex++;
                 }
                 node = node->left;
             }
@@ -64,7 +65,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
                     lastNode->setFreq(freq);
 
-                    // letterIndex++;
                     return true;
                 }
                 node = node->right;
@@ -112,22 +112,29 @@ bool DictionaryTrie::find(string word) const {
 /* TODO */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
-    vector<pair<string, int>> vec;
-
+    // a vector which contains a pair of word and frequency of words starting
+    // with a given prefix
+    vector<pair<string, int>> wordFreqPairs;
+    // find a node which will be a root node for searching
+    // if the prefix is empty, it is a root node
     TrieNode* lastPrefixNode =
         (prefix.size() != 0) ? endOfPrefixNode(prefix, 0, root) : root;
-    // include a given prefix in a prediction if necessary
+
+    // include a given prefix in a prediction if it's counted
     if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
-        vec.push_back(pair<string, int>(prefix, lastPrefixNode->getFreq()));
+        wordFreqPairs.push_back(
+            pair<string, int>(prefix, lastPrefixNode->getFreq()));
     }
 
-    TrieNode* rootForSearch =
-        (prefix.size() != 0) ? lastPrefixNode->middle : root;
+    // a node which is used as a root for searching
+    TrieNode* dfsRoot = (prefix.size() != 0) ? lastPrefixNode->middle : root;
+    // DFS to find most frequent words
+    completionHelper(dfsRoot, prefix, &wordFreqPairs, 0, numCompletions);
 
-    dfsForPredictCompletion(rootForSearch, prefix, &vec, 0, numCompletions);
-
+    // a vector which contains words most frequently used
     vector<string> result;
-    for (pair<string, int> p : vec) {
+
+    for (pair<string, int> p : wordFreqPairs) {
         result.push_back(p.first);
     }
 
@@ -163,43 +170,46 @@ TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
     }
 }
 
-void DictionaryTrie::dfsForPredictCompletion(TrieNode* root, string prefix,
-                                             vector<pair<string, int>>* vec,
-                                             int minFreq, int numCompletions) {
+void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
+                                      vector<pair<string, int>>* result,
+                                      int minFreq, int numCompletions) {
+    // base case
     if (root == nullptr) {
         return;
     }
 
     char letter = root->getData();
     int freq = root->getFreq();
-    if (freq > minFreq) {
-        int size = vec->size();
 
+    // nodes whose frequency is higher than a minimum frequency should be added
+    // to a result vector
+    if (freq > minFreq) {
+        // a current size of the result vector
+        int size = result->size();
+
+        // a node should be added when a vector is empty
         if (size == 0) {
-            vec->push_back(pair<string, int>(prefix + letter, freq));
-            minFreq = freq;
+            result->push_back(pair<string, int>(prefix + letter, freq));
         } else {
             // remove the least frequent word if a vector is full
             if (size == numCompletions) {
-                vec->pop_back();
+                // a last word is always least frequent in a vector
+                result->pop_back();
                 // update the least frequency
-                minFreq = vec->end()->second;
+                minFreq = result->end()->second;
             }
 
-            bool inserted = false;
             for (int i = 0; i < size; i++) {
                 // insert a pair into an appropriate position
-                if (freq >= vec->at(i).second) {
-                    vec->insert(vec->begin() + i,
-                                pair<string, int>(prefix + letter, freq));
-                    inserted = true;
+                if (freq >= result->at(i).second) {
+                    result->insert(result->begin() + i,
+                                   pair<string, int>(prefix + letter, freq));
                     break;
                 }
-            }
-
-            // when a given prefix is least frequent
-            if (!inserted) {
-                vec->push_back(pair<string, int>(prefix + letter, freq));
+                // when a current word is least frequent in a vector
+                else if (i == size - 1) {
+                    result->push_back(pair<string, int>(prefix + letter, freq));
+                }
             }
 
             // update the least frequency if a current word is it
@@ -207,10 +217,11 @@ void DictionaryTrie::dfsForPredictCompletion(TrieNode* root, string prefix,
         }
     }
 
-    dfsForPredictCompletion(root->left, prefix, vec, minFreq, numCompletions);
-    dfsForPredictCompletion(root->middle, prefix + letter, vec, minFreq,
-                            numCompletions);
-    dfsForPredictCompletion(root->right, prefix, vec, minFreq, numCompletions);
+    // recursive phase: left -> middle -> right
+    completionHelper(root->left, prefix, result, minFreq, numCompletions);
+    completionHelper(root->middle, prefix + letter, result, minFreq,
+                     numCompletions);
+    completionHelper(root->right, prefix, result, minFreq, numCompletions);
 }
 /* TODO */
 std::vector<string> DictionaryTrie::predictUnderscores(

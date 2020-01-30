@@ -24,6 +24,14 @@ class DictionaryTrie {
 
     void deleteAll(TrieNode* node);
 
+    TrieNode* createMiddleLine(string str, int index, TrieNode* node);
+
+    TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
+
+    void completionHelper(TrieNode* root, string prefix,
+                          vector<pair<string, int>>* vec, int minFreq,
+                          int numCompletions);
+
   public:
     /* TODO: add function header */
     DictionaryTrie();
@@ -44,14 +52,6 @@ class DictionaryTrie {
 
     /* TODO: add function header */
     ~DictionaryTrie();
-
-    TrieNode* createMiddleLine(string str, int index, TrieNode* node);
-
-    TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
-
-    void dfsForPredictCompletion(TrieNode* root, string prefix,
-                                 vector<pair<string, int>>* vec, int minFreq,
-                                 int numCompletions);
 };
 
 #endif  // DICTIONARY_TRIE_HPP

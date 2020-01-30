@@ -80,10 +80,10 @@ TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     DictionaryTrie dict;
     dict.insert("apple", 143);
     dict.insert("book", 600);
-    dict.insert("ape", 13);
+    dict.insert("ape", 1300);
 
     vector<string> prediction = dict.predictCompletions("a", 3);
-    string tests[2] = {"apple", "ape"};
+    string tests[2] = {"ape", "apple"};
     for (int i = 0; i < prediction.size(); i++) {
         ASSERT_EQ(prediction.at(i), tests[i]);
     }
