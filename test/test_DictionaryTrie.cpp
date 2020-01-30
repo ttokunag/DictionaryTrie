@@ -79,12 +79,14 @@ TEST(DictTrieTests, FIND_TEST) {
 TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     DictionaryTrie dict;
     dict.insert("apple", 143);
+    dict.insert("ap", 143);
     dict.insert("book", 600);
-    dict.insert("ape", 1300);
+    dict.insert("ape", 143);
 
     vector<string> prediction = dict.predictCompletions("a", 3);
-    string tests[2] = {"ape", "apple"};
+    string tests[3] = {"ap", "ape", "apple"};
     for (int i = 0; i < prediction.size(); i++) {
+        cout << prediction.at(i) << endl;
         ASSERT_EQ(prediction.at(i), tests[i]);
     }
 }

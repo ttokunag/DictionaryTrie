@@ -31,13 +31,21 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
     while (letterIndex < word.size()) {
         char letter = word.at(letterIndex);
+        char nodeLetter = node->getData();
         // when a current node and a current letter match
-        if (letter == node->getData()) {
+        if (letter == nodeLetter) {
+            if (letterIndex == word.size() - 1) {
+                if (node->getFreq() > 0) {
+                    return false;
+                }
+                node->setFreq(freq);
+                return true;
+            }
             node = node->middle;
             letterIndex++;
         } else {
             // when a letter is smaller than a current node letter
-            if (letter < node->getData()) {
+            if (letter < nodeLetter) {
                 // when a left node hasn't been set yet
                 if (node->left == nullptr) {
                     node->left = new TrieNode(letter);
@@ -186,10 +194,11 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
     if (freq > minFreq) {
         // a current size of the result vector
         int size = result->size();
+        string currStr = prefix + letter;
 
         // a node should be added when a vector is empty
         if (size == 0) {
-            result->push_back(pair<string, int>(prefix + letter, freq));
+            result->push_back(pair<string, int>(currStr, freq));
         } else {
             // remove the least frequent word if a vector is full
             if (size == numCompletions) {
@@ -200,15 +209,24 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
             }
 
             for (int i = 0; i < size; i++) {
+                pair<string, int> curr = result->at(i);
                 // insert a pair into an appropriate position
-                if (freq >= result->at(i).second) {
+                if (freq > curr.second) {
                     result->insert(result->begin() + i,
-                                   pair<string, int>(prefix + letter, freq));
+                                   pair<string, int>(currStr, freq));
                     break;
+                } else if (freq == curr.second) {
+                    // when two words have equal frequency, a word which is
+                    // alphabetially earlier should come first
+                    if (currStr < curr.first) {
+                        result->insert(result->begin() + i,
+                                       pair<string, int>(currStr, freq));
+                        break;
+                    }
                 }
                 // when a current word is least frequent in a vector
-                else if (i == size - 1) {
-                    result->push_back(pair<string, int>(prefix + letter, freq));
+                if (i == size - 1) {
+                    result->push_back(pair<string, int>(currStr, freq));
                 }
             }
 
