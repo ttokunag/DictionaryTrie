@@ -75,3 +75,16 @@ TEST(DictTrieTests, FIND_TEST) {
     ASSERT_EQ(dict.find("apb"), false);
     ASSERT_EQ(dict.find("app"), false);
 }
+
+TEST(DictTrieTests, END_OF_PREFIX_TEST) {
+    DictionaryTrie dict;
+    dict.insert("apple", 0);
+    dict.insert("book", 0);
+    dict.insert("ape", 0);
+
+    TrieNode* apResult = dict.endOfPrefixNode("ap", 0, dict.root);
+    TrieNode* bResult = dict.endOfPrefixNode("b", 0, dict.root);
+
+    ASSERT_EQ(apResult->getData(), 'p');
+    ASSERT_EQ(bResult->getData(), 'o');
+}

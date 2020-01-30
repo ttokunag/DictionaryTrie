@@ -112,7 +112,39 @@ bool DictionaryTrie::find(string word) const {
 /* TODO */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
-    return {};
+    // a vector which contains predictions
+    vector<string> result;
+
+    return result;
+}
+
+TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
+                                          TrieNode* node) {
+    // base case
+    if (node == nullptr) {
+        return node;
+    }
+
+    char currChar = prefix.at(index);
+    char nodeChar = node->getData();
+
+    // when a current letter equals a node letter
+    if (currChar == nodeChar) {
+        // when reached the destination node
+        if (index == prefix.size() - 1) {
+            return node->middle;
+        } else {
+            return endOfPrefixNode(prefix, index + 1, node->middle);
+        }
+    }
+    // when a current letter is smaller than a node letter
+    else if (currChar < nodeChar) {
+        return endOfPrefixNode(prefix, index, node->left);
+    }
+    // when a current letter is larger than a node letter
+    else {
+        return endOfPrefixNode(prefix, index, node->right);
+    }
 }
 
 /* TODO */

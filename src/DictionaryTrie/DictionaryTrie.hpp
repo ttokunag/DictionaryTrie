@@ -48,6 +48,8 @@ class DictionaryTrie {
     void deleteAll(TrieNode* node);
 
     TrieNode* placeAllOnMiddleLine(string str, int index, TrieNode* node);
+
+    TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
 };
 
 #endif  // DICTIONARY_TRIE_HPP
