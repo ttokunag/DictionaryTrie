@@ -1,3 +1,0 @@
-Reading file: data/short_dict.txt
-Enter a prefix/pattern to search for:
-Enter a number of completions:

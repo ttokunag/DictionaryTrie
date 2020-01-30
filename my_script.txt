@@ -1,0 +1,39 @@
+Reading file: data/large_freq_dict.txt
+Enter a prefix/pattern to search for:
+Enter a number of completions:
+and then
+and what
+and with
+and others
+Continue? (y/n)
+Enter a prefix/pattern to search for:
+Enter a number of completions:
+as well as
+assume
+as to
+Continue? (y/n)
+Enter a prefix/pattern to search for:
+Enter a number of completions:
+bar
+battle
+background
+Continue? (y/n)
+Enter a prefix/pattern to search for:
+Enter a number of completions:
+her
+he did nt
+hello
+he was a
+he will
+Continue? (y/n)
+Enter a prefix/pattern to search for:
+Enter a number of completions:
+but
+but to
+but i think
+but it is
+but is
+buttony
+butters
+butylene
+Continue? (y/n)

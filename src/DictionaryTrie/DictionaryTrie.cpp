@@ -239,7 +239,8 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
                 // minFreq = result->end()->second;
 
                 // a word at the end of a vector is least frequent
-                pair<string, int> last = *(result->end());
+                // pair<string, int> last = *(result->end());
+                pair<string, int> last = result->at(numCompletions - 1);
 
                 // when a current prefix is more frequent
                 if (freq > last.second) {
