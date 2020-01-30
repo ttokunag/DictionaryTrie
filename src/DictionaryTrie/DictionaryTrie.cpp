@@ -32,6 +32,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
     while (letterIndex < word.size()) {
         char letter = word.at(letterIndex);
         char nodeLetter = node->getData();
+
         // when a current node and a current letter match
         if (letter == nodeLetter) {
             if (letterIndex == word.size() - 1) {
@@ -60,40 +61,36 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
             node = node->middle;
             letterIndex++;
-        } else {
-            // when a letter is smaller than a current node letter
-            if (letter < nodeLetter) {
-                // when a left node hasn't been set yet
-                if (node->left == nullptr) {
-                    node->left = new TrieNode(letter);
-                    node = node->left;
-
-                    // a last node for a last letter of a given word
-                    TrieNode* lastNode =
-                        createMiddleLine(word, letterIndex + 1, node);
-
-                    lastNode->setFreq(freq);
-
-                    return true;
-                }
+        }
+        // when a current letter is smaller than a node letter
+        else if (letter < nodeLetter) {
+            if (node->left == nullptr) {
+                node->left = new TrieNode(letter);
                 node = node->left;
+
+                // a last node for a last letter of a given word
+                TrieNode* lastNode =
+                    createMiddleLine(word, letterIndex + 1, node);
+
+                lastNode->setFreq(freq);
+                return true;
             }
-            // when a letter is larger than a current node letter
-            else {
-                // when a right node hasn't been set yet
-                if (node->right == nullptr) {
-                    node->right = new TrieNode(letter);
-                    node = node->right;
-
-                    TrieNode* lastNode =
-                        createMiddleLine(word, letterIndex + 1, node);
-
-                    lastNode->setFreq(freq);
-
-                    return true;
-                }
+            node = node->left;
+        }
+        // when a current letter is larger than a node letter
+        else {
+            // when a right node hasn't been set yet
+            if (node->right == nullptr) {
+                node->right = new TrieNode(letter);
                 node = node->right;
+
+                TrieNode* lastNode =
+                    createMiddleLine(word, letterIndex + 1, node);
+
+                lastNode->setFreq(freq);
+                return true;
             }
+            node = node->right;
         }
     }
 }
