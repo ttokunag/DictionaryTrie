@@ -219,7 +219,6 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
 
     // nodes whose frequency is higher than a minimum frequency should be added
     // to a result vector
-    // if (freq > minFreq) {
     if (freq > 0) {
         // a current size of the result vector
         int size = result->size();
@@ -233,13 +232,6 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
         else {
             // remove the least frequent word if a vector is full
             if (size == numCompletions) {
-                // // a last word is always least frequent in a vector
-                // result->pop_back();
-                // // update the least frequency
-                // minFreq = result->end()->second;
-
-                // a word at the end of a vector is least frequent
-                // pair<string, int> last = *(result->end());
                 pair<string, int> last = result->at(numCompletions - 1);
 
                 // when a current prefix is more frequent
@@ -270,8 +262,7 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
                     }
                     // when there exists a word with the same frequency
                     else if (freq == curr.second) {
-                        // a word which is alphabetially earlier should come
-                        // first
+                        // a word alphabetially earlier should come first
                         if (currStr < curr.first) {
                             result->insert(result->begin() + i,
                                            pair<string, int>(currStr, freq));
@@ -279,7 +270,6 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
                         }
                     }
                     // when a current word is least frequent in a vector
-                    // if (i == size - 1) {
                     if (i == vecSize - 1) {
                         result->push_back(pair<string, int>(currStr, freq));
                     }

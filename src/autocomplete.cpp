@@ -60,7 +60,6 @@ int main(int argc, char** argv) {
 
     ifstream in;
     in.open(argv[1], ios::binary);
-    // in.open("./data/short_dict.txt", ios::binary);
     string word;
 
     Utils::loadDict(*dt, in);
