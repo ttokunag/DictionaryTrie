@@ -95,10 +95,9 @@ TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     dict.insert("book", 600);
     dict.insert("ape", 13);
 
-    // vector<string>* vec = new vector<string>();
-    vector<pair<string, int>>* vec = new vector<pair<string, int>>();
-
-    dict.dfsForPredictCompletion(dict.root, "", vec, 0, 3);
-
-    ASSERT_NE(vec->size(), 0);
+    vector<string> prediction = dict.predictCompletions("a", 2);
+    string tests[2] = {"apple", "ape"};
+    for (int i = 0; i < prediction.size(); i++) {
+        ASSERT_EQ(prediction.at(i), tests[i]);
+    }
 }

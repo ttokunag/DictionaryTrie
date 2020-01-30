@@ -126,10 +126,14 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 
     TrieNode* rootForSearch = lastPrefixNode->middle;
 
-    dfsForPredictCompletion(rootForSearch, "", &vec, 0, numCompletions);
+    dfsForPredictCompletion(rootForSearch, prefix, &vec, 0, numCompletions);
 
-    // return result;
-    return vector<string>();
+    vector<string> result;
+    for (pair<string, int> p : vec) {
+        result.push_back(p.first);
+    }
+
+    return result;
 }
 
 TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
