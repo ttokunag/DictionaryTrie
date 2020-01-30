@@ -50,6 +50,9 @@ class DictionaryTrie {
     TrieNode* placeAllOnMiddleLine(string str, int index, TrieNode* node);
 
     TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
+
+    void dfsForPredictCompletion(TrieNode* root, string prefix,
+                                 vector<string>* result);
 };
 
 #endif  // DICTIONARY_TRIE_HPP

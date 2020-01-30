@@ -115,6 +115,13 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
     // a vector which contains predictions
     vector<string> result;
 
+    TrieNode* lastPrefixNode = endOfPrefixNode(prefix, 0, root);
+    if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
+        result.push_back(prefix);
+    }
+
+    TrieNode* rootForSearch = lastPrefixNode->middle;
+
     return result;
 }
 
@@ -132,7 +139,7 @@ TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
     if (currChar == nodeChar) {
         // when reached the destination node
         if (index == prefix.size() - 1) {
-            return node->middle;
+            return node;
         } else {
             return endOfPrefixNode(prefix, index + 1, node->middle);
         }
@@ -145,6 +152,22 @@ TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
     else {
         return endOfPrefixNode(prefix, index, node->right);
     }
+}
+
+void DictionaryTrie::dfsForPredictCompletion(TrieNode* root, string prefix,
+                                             vector<string>* result) {
+    if (root == nullptr) {
+        return;
+    }
+
+    char letter = root->getData();
+    if (root->getFreq() > 0) {
+        result->push_back(prefix + letter);
+    }
+
+    dfsForPredictCompletion(root->left, prefix, result);
+    dfsForPredictCompletion(root->middle, prefix + letter, result);
+    dfsForPredictCompletion(root->right, prefix, result);
 }
 
 /* TODO */

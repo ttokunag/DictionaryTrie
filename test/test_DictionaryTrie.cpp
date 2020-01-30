@@ -86,5 +86,18 @@ TEST(DictTrieTests, END_OF_PREFIX_TEST) {
     TrieNode* bResult = dict.endOfPrefixNode("b", 0, dict.root);
 
     ASSERT_EQ(apResult->getData(), 'p');
-    ASSERT_EQ(bResult->getData(), 'o');
+    ASSERT_EQ(bResult->getData(), 'b');
+}
+
+TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
+    DictionaryTrie dict;
+    dict.insert("apple", 1);
+    dict.insert("book", 1);
+    dict.insert("ape", 1);
+
+    vector<string>* vec = new vector<string>();
+
+    dict.dfsForPredictCompletion(dict.root, "", vec);
+
+    ASSERT_NE(vec->size(), 0);
 }
