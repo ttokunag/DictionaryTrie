@@ -22,7 +22,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         root = new TrieNode(word.at(letterIndex++));
         node = root;
 
-        TrieNode* lastNode = placeAllOnMiddleLine(word, letterIndex, node);
+        TrieNode* lastNode = createMiddleLine(word, letterIndex, node);
 
         // set a frequency of a word in a destination node
         lastNode->setFreq(freq);
@@ -43,7 +43,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                     node->left = new TrieNode(letter);
                     node = node->left;
                     TrieNode* lastNode =
-                        placeAllOnMiddleLine(word, letterIndex + 1, node);
+                        createMiddleLine(word, letterIndex + 1, node);
 
                     lastNode->setFreq(freq);
 
@@ -60,7 +60,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                     node = node->right;
 
                     TrieNode* lastNode =
-                        placeAllOnMiddleLine(word, letterIndex + 1, node);
+                        createMiddleLine(word, letterIndex + 1, node);
 
                     lastNode->setFreq(freq);
 
@@ -241,8 +241,8 @@ void DictionaryTrie::deleteAll(TrieNode* node) {
     delete node->right;
 }
 
-TrieNode* DictionaryTrie::placeAllOnMiddleLine(string str, int index,
-                                               TrieNode* node) {
+TrieNode* DictionaryTrie::createMiddleLine(string str, int index,
+                                           TrieNode* node) {
     for (int i = index; i < str.size(); i++) {
         // keeps going down a middle node
         node->middle = new TrieNode(str.at(i));

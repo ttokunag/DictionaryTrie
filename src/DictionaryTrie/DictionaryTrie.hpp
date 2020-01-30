@@ -20,11 +20,11 @@ using namespace std;
 class DictionaryTrie {
   private:
     // TODO: add private members and helper methods here
-    // TrieNode* root;
-
-  public:
     TrieNode* root;
 
+    void deleteAll(TrieNode* node);
+
+  public:
     /* TODO: add function header */
     DictionaryTrie();
 
@@ -45,9 +45,7 @@ class DictionaryTrie {
     /* TODO: add function header */
     ~DictionaryTrie();
 
-    void deleteAll(TrieNode* node);
-
-    TrieNode* placeAllOnMiddleLine(string str, int index, TrieNode* node);
+    TrieNode* createMiddleLine(string str, int index, TrieNode* node);
 
     TrieNode* endOfPrefixNode(string prefix, int index, TrieNode* node);
 
