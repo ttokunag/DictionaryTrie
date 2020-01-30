@@ -71,16 +71,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
             }
         }
     }
-
-    // // determine if a given word is already inserted by inspecting if a
-    // // destination node is already set a frequency
-    // if (node->getFreq() > 0) {
-    //     return false;
-    // }
-
-    // // set a frequency of a word
-    // node->setFreq(freq);
-
     return false;
 }
 
