@@ -33,7 +33,7 @@ class DictionaryTrie {
                               int freq);
 
     int addNewNodes(TrieNode* node, int flag, string word, int freq,
-                     int letterIndex);
+                    int letterIndex);
 
   public:
     /* TODO: add function header */

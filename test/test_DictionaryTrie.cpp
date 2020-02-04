@@ -90,11 +90,11 @@ TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     dict.insert("book", 600);
     dict.insert("ape", 144);
 
-    vector<string> prediction = dict.predictCompletions("ap", 3);
+    vector<string> pred = dict.predictCompletions("ap", 3);
     string tests[3] = {"ape", "ap", "apple"};
-    for (int i = 0; i < prediction.size(); i++) {
-        cout << prediction.at(i) << endl;
-        ASSERT_EQ(prediction.at(i), tests[i]);
+    for (int i = 0; i < pred.size(); i++) {
+        cout << pred.at(i) << endl;
+        ASSERT_EQ(pred.at(i), tests[i]);
     }
 
     vector<string> test = dict.predictCompletions("and", 3);

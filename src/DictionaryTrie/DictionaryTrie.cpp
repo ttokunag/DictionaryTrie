@@ -35,6 +35,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 
         // when a current node and a current letter match
         if (letter == nodeLetter) {
+            // when reached the destination
             if (letterIndex == word.size() - 1) {
                 // when a given word is already in a trie
                 if (node->getFreq() > 0) {
@@ -45,6 +46,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
                 return true;
             }
 
+            // when a current node has no middle child but letters equal
             if (node->middle == nullptr) {
                 // add new Trie nodes
                 letterIndex = addNewNodes(node, 1, word, freq, letterIndex);
