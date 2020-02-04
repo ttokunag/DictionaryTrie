@@ -228,7 +228,23 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
 /* TODO */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
+    // a vector holding up to numCompletions of predictions with frequency
+    vector<pair<string, int>> predict;
+
     return {};
+}
+
+void DictionaryTrie::underscoreRec(TrieNode* node,
+                                   vector<pair<string, int>>* vec,
+                                   string prefix, int numCompletions) {
+    // base case:
+    // 1. when stepping into an empty node
+    // 2. when a prefix is empty
+    if (node == nullptr || prefix.size() == 0) {
+        return;
+    }
+
+    char headChar = prefix.at(0);
 }
 
 /* TODO */
