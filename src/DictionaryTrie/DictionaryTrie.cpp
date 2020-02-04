@@ -245,6 +245,14 @@ void DictionaryTrie::underscoreRec(TrieNode* node,
     }
 
     char headChar = prefix.at(0);
+    if (headChar == '_') {
+        // Trie traversal for an underscore
+        // find all possible next node?
+        // then, do for loop and call itself recursively for each node
+    } else {
+        // headChar is supposed to be an actual character
+        // find a node with a headChar, then call itself recursively
+    }
 }
 
 /* TODO */
