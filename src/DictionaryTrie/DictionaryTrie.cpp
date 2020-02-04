@@ -239,19 +239,22 @@ void DictionaryTrie::underscoreRec(TrieNode* node,
                                    string prefix, int numCompletions) {
     // base case:
     // 1. when stepping into an empty node
-    // 2. when a prefix is empty
-    if (node == nullptr || prefix.size() == 0) {
+    // 2. when a prefix is empty ==> call predictCompletions
+    if (node == nullptr) {
+        return;
+    } else if (prefix.size() == 0) {
         return;
     }
 
     char headChar = prefix.at(0);
     if (headChar == '_') {
         // Trie traversal for an underscore
-        // find all possible next node?
-        // then, do for loop and call itself recursively for each node
+        // node->left & node->right recursive, then node->middle
+        // and feed a next letter in a given prefix to a recursive call
     } else {
         // headChar is supposed to be an actual character
-        // find a node with a headChar, then call itself recursively
+        // find a node with a headChar
+        // if prefix.size() == 1 && a node exists, add to a vector
     }
 }
 
