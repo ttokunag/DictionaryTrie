@@ -117,47 +117,47 @@ TEST(DictTrieTests, END_OF_PREFIX_TEST) {
 TEST(DictTrieTests, UNDERSCORE_TEST) {
     DictionaryTrie dict;
 
-    ASSERT_EQ(dict.insert("pale", 1), true);
-    ASSERT_EQ(dict.insert("plus", 1), true);
-    ASSERT_EQ(dict.insert("pack", 1), true);
-    ASSERT_EQ(dict.insert("park", 1), true);
-    ASSERT_EQ(dict.insert("pick", 1), true);
-    ASSERT_EQ(dict.insert("pork", 1), true);
-    ASSERT_EQ(dict.insert("peek", 1), true);
-    ASSERT_EQ(dict.insert("jack", 1), true);
-    ASSERT_EQ(dict.insert("back", 1), true);
+    ASSERT_EQ(dict.insert("pale", 43), true);
+    ASSERT_EQ(dict.insert("plus", 43), true);
+    ASSERT_EQ(dict.insert("pack", 631), true);
+    ASSERT_EQ(dict.insert("park", 710), true);
+    ASSERT_EQ(dict.insert("pick", 1064), true);
+    ASSERT_EQ(dict.insert("pork", 894), true);
+    ASSERT_EQ(dict.insert("peek", 24), true);
+    ASSERT_EQ(dict.insert("jack", 109), true);
+    ASSERT_EQ(dict.insert("back", 1064), true);
 
     // test for a middle underscore
     vector<string> test1 = dict.predictUnderscores("pa_k", 5);
-    string ans1[2] = {"pack", "park"};
+    string ans1[2] = {"park", "pack"};
     for (int i = 0; i < sizeof(ans1) / sizeof(ans1[0]); i++) {
         ASSERT_EQ(test1.at(i), ans1[i]);
     }
 
     // test for consecutive underscores
     vector<string> test2 = dict.predictUnderscores("p__k", 5);
-    string ans2[5] = {"pack", "park", "peek", "pick", "pork"};
+    string ans2[5] = {"pick", "pork", "park", "pack", "peek"};
     for (int i = 0; i < sizeof(ans2) / sizeof(ans2[0]); i++) {
         ASSERT_EQ(test2.at(i), ans2[i]);
     }
 
     // test for a beginning underscore
     vector<string> test3 = dict.predictUnderscores("_ack", 5);
-    string ans3[3] = {"back", "jack", "pack"};
+    string ans3[3] = {"back", "pack", "jack"};
     for (int i = 0; i < sizeof(ans3) / sizeof(ans3[0]); i++) {
         ASSERT_EQ(test3.at(i), ans3[i]);
     }
 
     // test for a last underscore
     vector<string> test4 = dict.predictUnderscores("pa__", 2);
-    string ans4[2] = {"pack", "pale"};
+    string ans4[2] = {"park", "pack"};
     for (int i = 0; i < sizeof(ans4) / sizeof(ans4[0]); i++) {
         ASSERT_EQ(test4.at(i), ans4[i]);
     }
 
     // test for an all blank pattern
     vector<string> test5 = dict.predictUnderscores("____", 5);
-    string ans5[5] = {"back", "jack", "pack", "pale", "park"};
+    string ans5[5] = {"back", "pick", "pork", "park", "pack"};
     for (int i = 0; i < sizeof(ans5) / sizeof(ans5[0]); i++) {
         ASSERT_EQ(test5.at(i), ans5[i]);
     }
