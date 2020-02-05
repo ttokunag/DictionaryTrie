@@ -113,3 +113,29 @@ TEST(DictTrieTests, END_OF_PREFIX_TEST) {
     ASSERT_EQ(coNode, nullptr);
     ASSERT_EQ(apNode->getData(), 'p');
 }
+
+TEST(DictTrieTests, UNDERSCORE_TEST) {
+    DictionaryTrie dict;
+
+    ASSERT_EQ(dict.insert("pale", 1), true);
+    ASSERT_EQ(dict.insert("plus", 1), true);
+    ASSERT_EQ(dict.insert("pack", 1), true);
+    ASSERT_EQ(dict.insert("park", 1), true);
+    ASSERT_EQ(dict.insert("pick", 1), true);
+    ASSERT_EQ(dict.insert("pork", 1), true);
+    ASSERT_EQ(dict.insert("peek", 1), true);
+    ASSERT_EQ(dict.insert("jack", 1), true);
+    ASSERT_EQ(dict.insert("back", 1), true);
+
+    vector<string> test1 = dict.predictUnderscores("pa_k", 5);
+    string ans1[2] = {"pack", "park"};
+    for (int i = 0; i < test1.size(); i++) {
+        ASSERT_EQ(test1.at(i), ans1[i]);
+    }
+
+    vector<string> test2 = dict.predictUnderscores("p__k", 5);
+    string ans2[5] = {"pack", "park", "peek", "pick", "pork"};
+    for (int i = 0; i < test2.size(); i++) {
+        ASSERT_EQ(test2.at(i), ans2[i]);
+    }
+}

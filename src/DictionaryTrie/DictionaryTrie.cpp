@@ -248,7 +248,7 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
     // base case:
     // 1. when stepping into an empty node
     // 2. when a prefix is empty
-    if (node == nullptr && prefix.size() == 0) {
+    if (node == nullptr || prefix.size() == 0) {
         return;
     }
 
@@ -287,12 +287,63 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
 
         // when we're looking at a last letter of a given prefix
         if (prefix.size() == 1 && node->getFreq() > 0) {
-            // add a first prediction to a vector
-            vec->push_back(
-                pair<string, int>(predict + nodeChar, node->getFreq()));
+            // add a prediction to a vector
+            // vec->push_back(
+            //     pair<string, int>(predict + nodeChar, node->getFreq()));
+
+            addPredict(vec, nextPredict, node->getFreq(), maxSize);
         }
 
         underscoreRec(node->middle, nextPredict, vec, nextPrefix, maxSize);
+    }
+}
+
+void DictionaryTrie::addPredict(vector<pair<string, int>>* vec, string predict,
+                                int freq, int maxSize) {
+    // when a vector is empty --> safe to add a new prediction
+    if (vec->size() == 0) {
+        vec->push_back(pair<string, int>(predict, freq));
+        return;
+    }
+
+    pair<string, int> last = vec->at(vec->size() - 1);
+
+    if (vec->size() == maxSize) {
+        // when a given prediction's frequency is smaller than a least frequent
+        // prediction in a vector --> the prediction is not qualified
+        if (freq < last.second) {
+            return;
+        }
+        // when two predictions have equal frequency
+        else if (freq == last.second) {
+            // when a given prediction alphabetically comes earlier
+            if (predict < last.first) {
+                vec->pop_back();
+            } else {
+                return;
+            }
+        }
+        // when a given prediction has higher frequency than a current last
+        // element
+        else {
+            vec->pop_back();
+        }
+    }
+
+    int vecSize = vec->size();
+    for (int i = 0; i < vecSize; i++) {
+        pair<string, int> curr = vec->at(i);
+        if (freq > curr.second) {
+            vec->insert(vec->begin() + i, pair<string, int>(predict, freq));
+            break;
+        } else if (freq == curr.second && predict < curr.first) {
+            vec->insert(vec->begin() + i, pair<string, int>(predict, freq));
+            break;
+        }
+
+        if (i == vecSize - 1) {
+            vec->push_back(pair<string, int>(predict, freq));
+        }
     }
 }
 

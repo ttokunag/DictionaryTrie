@@ -41,6 +41,9 @@ class DictionaryTrie {
 
     TrieNode* findNode(TrieNode* node, char c);
 
+    void addPredict(vector<pair<string, int>>* vec, string predict, int freq,
+                    int maxSize);
+
   public:
     /* TODO: add function header */
     DictionaryTrie();
