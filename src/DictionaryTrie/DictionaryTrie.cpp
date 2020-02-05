@@ -1,7 +1,10 @@
 /**
- * TODO: File Header
+ * This file implements all methods related to a dictionary trie data structure,
+ * which allows us to use autocompletion. TrieNode class, a very significant
+ * component of this data structure is defined in TrieNode.hpp. You may refer to
+ * it for some operations related to TrieNode.
  *
- * Author:
+ * Author: Tomoya Tokunaga
  */
 #include "DictionaryTrie.hpp"
 #include <iostream>
