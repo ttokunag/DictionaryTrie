@@ -9,10 +9,18 @@
 #include "DictionaryTrie.hpp"
 #include <iostream>
 
-/* TODO */
+/*
+ *  A constructor of DictionaryTrie. Initializes a root.
+ */
 DictionaryTrie::DictionaryTrie() { root = nullptr; }
 
-/* TODO */
+/*
+ * Inserts a new word to a DictionaryTrie. A node which corresponds with a last
+ * letter of a given word will be set frequency
+ *
+ * @param string: a word to be inserted to a DictionaryTrie
+ * @param int: frequency of a given word
+ */
 bool DictionaryTrie::insert(string word, unsigned int freq) {
     // an index pointing a letter of a given word;
     int letterIndex = 0;
@@ -328,8 +336,7 @@ void DictionaryTrie::addPredict(vector<pair<string, int>>* vec, string predict,
                 return;
             }
         }
-        // when a given prediction has higher frequency than a current last
-        // element
+        // when a given predict has higher frequency than a current last element
         else {
             vec->pop_back();
         }
