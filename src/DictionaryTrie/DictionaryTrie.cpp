@@ -271,9 +271,6 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
         // when we're looking at a last letter of a given prefix
         if (prefix.size() == 1 && node->getFreq() > 0) {
             // add a prediction to a vector
-            // vec->push_back(
-            //     pair<string, int>(predict + nodeChar, node->getFreq()));
-
             addPredict(vec, nextPredict, node->getFreq(), maxSize);
         }
 
@@ -298,9 +295,6 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
         // when we're looking at a last letter of a given prefix
         if (prefix.size() == 1 && node->getFreq() > 0) {
             // add a prediction to a vector
-            // vec->push_back(
-            //     pair<string, int>(predict + nodeChar, node->getFreq()));
-
             addPredict(vec, nextPredict, node->getFreq(), maxSize);
         }
 
