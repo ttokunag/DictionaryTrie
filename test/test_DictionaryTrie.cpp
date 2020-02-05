@@ -138,4 +138,12 @@ TEST(DictTrieTests, UNDERSCORE_TEST) {
     for (int i = 0; i < test2.size(); i++) {
         ASSERT_EQ(test2.at(i), ans2[i]);
     }
+
+    ASSERT_EQ(dict.find("pack"), true);
+
+    vector<string> test3 = dict.predictUnderscores("_ack", 5);
+    string ans3[3] = {"back", "jack", "pack"};
+    for (int i = 0; i < test3.size(); i++) {
+        ASSERT_EQ(test3.at(i), ans3[i]);
+    }
 }

@@ -275,10 +275,10 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
         // if prefix.size() == 1 && a node exists, add to a vector
 
         // find a node with a headChar
-        TrieNode* nodeWithHeadChar = findNode(node, headChar);
+        node = findNode(node, headChar);
 
         // if such a node doesn't exist, finish this function call
-        if (nodeWithHeadChar == nullptr) {
+        if (node == nullptr) {
             return;
         }
 
