@@ -239,7 +239,8 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string prediction,
                                    string prefix, int numCompletions) {
     // base case:
     // 1. when stepping into an empty node
-    // 2. when a prefix is empty ==> call predictCompletions
+    // 2. when a prefix is empty
+    // ==> call predictCompletions with a current node as a root
     if (node == nullptr) {
         return;
     } else if (prefix.size() == 0) {
@@ -278,8 +279,34 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string prediction,
         string nextPrefix = prefix.substr(1, prefix.size());
         string nextPrediction = prediction + headChar;
 
+        // when we're looking at a last letter of a given prefix
+        if (prefix.size() == 1 && node->getFreq() > 0) {
+            // add a first prediction to a vector
+            vec->push_back(pair<string, int>(prediction + node->getData(),
+                                             node->getFreq()));
+        }
+
         underscoreRec(node->middle, nextPrediction, vec, nextPrefix,
                       numCompletions);
+    }
+}
+
+TrieNode* DictionaryTrie::findNode(TrieNode* node, char c) {
+    // base case:
+    // 1. when a null pointer is passed --> return nullptr
+    // 2. when a node holds a character we're looking for
+    if (node == nullptr) {
+        return nullptr;
+    }
+
+    char nodeChar = node->getData();
+
+    if (c == nodeChar) {
+        return node;
+    } else if (c < nodeChar) {
+        return findNode(node->left, c);
+    } else {
+        return findNode(node->right, c);
     }
 }
 
