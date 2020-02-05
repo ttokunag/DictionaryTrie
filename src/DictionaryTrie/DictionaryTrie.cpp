@@ -89,7 +89,12 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
     }
 }
 
-/* TODO */
+/*
+ * Finds if a given word is in a DictionaryTrie. If it exists in a trie, this
+ * returns true. Otherwise return false
+ *
+ * @param string: a word which this function looks for
+ */
 bool DictionaryTrie::find(string word) const {
     // a node we are currently at
     TrieNode* node = root;
@@ -124,7 +129,13 @@ bool DictionaryTrie::find(string word) const {
     return letterIndex == word.size();
 }
 
-/* TODO */
+/*
+ * Returns a vector of up to numCompletions of words which contain a given
+ * prefix.
+ *
+ * @param string: a prefix which this function uses to find predictions
+ * @param int: a max number of predictions
+ */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
     // a vector which contains a pair of word and frequency of words starting
@@ -159,6 +170,14 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
     return result;
 }
 
+/*
+ * Returns a reference of a node whose data matches a last letter of a give
+ * prefix
+ *
+ * @param string: a word whose last letter will be contained in a return node
+ * @param int: an index of a current letter in a given prefix
+ * @param TrieNode*: a reference of a current node
+ */
 TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
                                           TrieNode* node) {
     // base case
