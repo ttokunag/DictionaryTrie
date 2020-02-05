@@ -234,7 +234,7 @@ std::vector<string> DictionaryTrie::predictUnderscores(
     return {};
 }
 
-void DictionaryTrie::underscoreRec(TrieNode* node,
+void DictionaryTrie::underscoreRec(TrieNode* node, string prediction,
                                    vector<pair<string, int>>* vec,
                                    string prefix, int numCompletions) {
     // base case:
@@ -251,10 +251,35 @@ void DictionaryTrie::underscoreRec(TrieNode* node,
         // Trie traversal for an underscore
         // node->left & node->right recursive, then node->middle
         // and feed a next letter in a given prefix to a recursive call
+
+        // cut off the head character ex) "CS_100" -> "S_100"
+        string nextPrefix = prefix.substr(1, prefix.size());
+        // add a current node character to a prediction
+        string nextPrediction = prediction + node->getData();
+
+        underscoreRec(node->left, prediction, vec, prefix, numCompletions);
+        underscoreRec(node->right, prediction, vec, prefix, numCompletions);
+        underscoreRec(node->middle, nextPrediction, vec, nextPrefix,
+                      numCompletions);
+
     } else {
         // headChar is supposed to be an actual character
         // find a node with a headChar
         // if prefix.size() == 1 && a node exists, add to a vector
+
+        // find a node with a headChar
+        TrieNode* nodeWithHeadChar = findNode(node, headChar);
+
+        // if such a node doesn't exist, finish this function call
+        if (nodeWithHeadChar == nullptr) {
+            return;
+        }
+
+        string nextPrefix = prefix.substr(1, prefix.size());
+        string nextPrediction = prediction + headChar;
+
+        underscoreRec(node->middle, nextPrediction, vec, nextPrefix,
+                      numCompletions);
     }
 }
 

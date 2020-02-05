@@ -35,8 +35,11 @@ class DictionaryTrie {
     int addNewNodes(TrieNode* node, int flag, string word, int freq,
                     int letterIndex);
 
-    void underscoreRec(TrieNode* node, vector<pair<string, int>>* vec,
-                       string prefix, int numCompletions);
+    void underscoreRec(TrieNode* node, string prediction,
+                       vector<pair<string, int>>* vec, string prefix,
+                       int numCompletions);
+
+    TrieNode* findNode(TrieNode* node, char c);
 
   public:
     /* TODO: add function header */
