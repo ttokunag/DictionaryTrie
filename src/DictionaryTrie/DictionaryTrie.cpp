@@ -225,29 +225,36 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
     completionHelper(root->middle, prefix + letter, result, numCompletions);
     completionHelper(root->right, prefix, result, numCompletions);
 }
+
 /* TODO */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
     // a vector holding up to numCompletions of predictions with frequency
-    vector<pair<string, int>> predict;
+    vector<pair<string, int>> predictions;
 
-    return {};
+    underscoreRec(root, "", &predictions, pattern, numCompletions);
+
+    vector<string> result;
+    for (pair<string, int> p : predictions) {
+        result.push_back(p.first);
+    }
+
+    return result;
 }
 
-void DictionaryTrie::underscoreRec(TrieNode* node, string prediction,
+void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
                                    vector<pair<string, int>>* vec,
-                                   string prefix, int numCompletions) {
+                                   string prefix, int maxSize) {
     // base case:
     // 1. when stepping into an empty node
     // 2. when a prefix is empty
-    // ==> call predictCompletions with a current node as a root
-    if (node == nullptr) {
-        return;
-    } else if (prefix.size() == 0) {
+    if (node == nullptr && prefix.size() == 0) {
         return;
     }
 
     char headChar = prefix.at(0);
+    char nodeChar = node->getData();
+
     if (headChar == '_') {
         // Trie traversal for an underscore
         // node->left & node->right recursive, then node->middle
@@ -256,12 +263,11 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string prediction,
         // cut off the head character ex) "CS_100" -> "S_100"
         string nextPrefix = prefix.substr(1, prefix.size());
         // add a current node character to a prediction
-        string nextPrediction = prediction + node->getData();
+        string nextPredict = predict + nodeChar;
 
-        underscoreRec(node->left, prediction, vec, prefix, numCompletions);
-        underscoreRec(node->right, prediction, vec, prefix, numCompletions);
-        underscoreRec(node->middle, nextPrediction, vec, nextPrefix,
-                      numCompletions);
+        underscoreRec(node->left, predict, vec, prefix, maxSize);
+        underscoreRec(node->right, predict, vec, prefix, maxSize);
+        underscoreRec(node->middle, nextPredict, vec, nextPrefix, maxSize);
 
     } else {
         // headChar is supposed to be an actual character
@@ -277,17 +283,16 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string prediction,
         }
 
         string nextPrefix = prefix.substr(1, prefix.size());
-        string nextPrediction = prediction + headChar;
+        string nextPredict = predict + headChar;
 
         // when we're looking at a last letter of a given prefix
         if (prefix.size() == 1 && node->getFreq() > 0) {
             // add a first prediction to a vector
-            vec->push_back(pair<string, int>(prediction + node->getData(),
-                                             node->getFreq()));
+            vec->push_back(
+                pair<string, int>(predict + nodeChar, node->getFreq()));
         }
 
-        underscoreRec(node->middle, nextPrediction, vec, nextPrefix,
-                      numCompletions);
+        underscoreRec(node->middle, nextPredict, vec, nextPrefix, maxSize);
     }
 }
 
