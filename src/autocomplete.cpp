@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
         cout << "Enter a number of completions:" << endl;
         cin >> numberOfCompletions;
 
-        // TODO
+        // Detect if a given word contains at least one underscore
         bool underscoreFound = false;
         for (int i = 0; i < word.size(); i++) {
             if (word.at(i) == '_') {
@@ -89,6 +89,7 @@ int main(int argc, char** argv) {
         // vector<string> result =
         //     dt->predictCompletions(word, numberOfCompletions);
 
+        // prints out gotten predictions
         for (string s : result) {
             cout << s << endl;
         }

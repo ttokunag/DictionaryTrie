@@ -232,8 +232,10 @@ std::vector<string> DictionaryTrie::predictUnderscores(
     // a vector holding up to numCompletions of predictions with frequency
     vector<pair<string, int>> predictions;
 
+    // find and add valid predictions to a vector
     underscoreRec(root, "", &predictions, pattern, numCompletions);
 
+    // extract a string part from a resultant prediction vector
     vector<string> result;
     for (pair<string, int> p : predictions) {
         result.push_back(p.first);
@@ -255,16 +257,14 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
     char headChar = prefix.at(0);
     char nodeChar = node->getData();
 
+    // when a letter being looked for is an underscore
     if (headChar == '_') {
-        // Trie traversal for an underscore
-        // node->left & node->right recursive, then node->middle
-        // and feed a next letter in a given prefix to a recursive call
-
         // cut off the head character ex) "CS_100" -> "S_100"
         string nextPrefix = prefix.substr(1, prefix.size());
         // add a current node character to a prediction
         string nextPredict = predict + nodeChar;
 
+        // exhaustively search all valid nodes with dfs
         underscoreRec(node->left, predict, vec, prefix, maxSize);
         underscoreRec(node->right, predict, vec, prefix, maxSize);
 
@@ -276,11 +276,9 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
 
         underscoreRec(node->middle, nextPredict, vec, nextPrefix, maxSize);
 
-    } else {
-        // headChar is supposed to be an actual character
-        // find a node with a headChar
-        // if prefix.size() == 1 && a node exists, add to a vector
-
+    }
+    // when a letter being looked for is a specific letter
+    else {
         // find a node with a headChar
         node = findNode(node, headChar);
 
