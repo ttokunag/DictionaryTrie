@@ -140,30 +140,41 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
     // a vector which contains a pair of word and frequency of words starting
     // with a given prefix
-    vector<pair<string, int>> wordFreqPairs;
+    vector<pair<string, int>> predictions;
     // find a node which will be a root node for searching
     // if the prefix is empty, it is a root node
-    TrieNode* lastPrefixNode =
-        (prefix.size() != 0) ? endOfPrefixNode(prefix, 0, root) : root;
+    // TrieNode* lastPrefixNode =
+    //     (prefix.size() != 0) ? endOfPrefixNode(prefix, 0, root) : root;
 
-    // include a given prefix in a prediction if it's counted
-    if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
-        wordFreqPairs.push_back(
-            pair<string, int>(prefix, lastPrefixNode->getFreq()));
-    }
+    TrieNode* lastPrefixNode = endOfPrefixNode(prefix, 0, root);
 
-    // a node which is used as a root for searching
     if (lastPrefixNode == nullptr) {
         return {};
     }
+
+    if (lastPrefixNode->getFreq() > 0) {
+        predictions.push_back(
+            pair<string, int>(prefix, lastPrefixNode->getFreq()));
+    }
+
+    // include a given prefix in a prediction if it's counted
+    // if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
+    //     predictions.push_back(
+    //         pair<string, int>(prefix, lastPrefixNode->getFreq()));
+    // }
+
+    // // a node which is used as a root for searching
+    // if (lastPrefixNode == nullptr) {
+    //     return {};
+    // }
     TrieNode* dfsRoot = (prefix.size() != 0) ? lastPrefixNode->middle : root;
     // DFS to find most frequent words
-    completionHelper(dfsRoot, prefix, &wordFreqPairs, numCompletions);
+    completionHelper(dfsRoot, prefix, &predictions, numCompletions);
 
     // a vector which contains words most frequently used
     vector<string> result;
 
-    for (pair<string, int> p : wordFreqPairs) {
+    for (pair<string, int> p : predictions) {
         result.push_back(p.first);
     }
 
@@ -181,7 +192,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
                                           TrieNode* node) {
     // base case
-    if (node == nullptr) {
+    if (node == nullptr || prefix.size() == 0) {
         return node;
     }
 
@@ -232,33 +243,34 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
     // nodes whose frequency is higher than a minimum frequency should be added
     // to a result vector
     if (freq > 0) {
-        // a current size of the result vector
-        int size = result->size();
-        string currStr = prefix + letter;
+        addPredict(result, prefix + letter, freq, numCompletions);
+        // // a current size of the result vector
+        // int size = result->size();
+        // string currStr = prefix + letter;
 
-        // a node should be added when a vector is empty
-        if (size == 0) {
-            result->push_back(pair<string, int>(currStr, freq));
-        }
-        // whenever a vecter is nonempty
-        else {
-            // remove the least frequent word if a vector is full
-            if (size == numCompletions) {
-                pair<string, int> last = result->at(numCompletions - 1);
+        // // a node should be added when a vector is empty
+        // if (size == 0) {
+        //     result->push_back(pair<string, int>(currStr, freq));
+        // }
+        // // whenever a vecter is nonempty
+        // else {
+        //     // remove the least frequent word if a vector is full
+        //     if (size == numCompletions) {
+        //         pair<string, int> last = result->at(size - 1);
 
-                // when a current prefix is more or equal to frequent
-                if (freq > last.second ||
-                    (freq == last.second && currStr < last.first)) {
-                    result->pop_back();
-                }
-            }
+        //         // when a current prefix is more or equal to frequent
+        //         if (freq > last.second ||
+        //             (freq == last.second && currStr < last.first)) {
+        //             result->pop_back();
+        //         }
+        //     }
 
-            // if a vector still has capacity, then add
-            if (result->size() < numCompletions) {
-                // isnert a current prefix to a result vector
-                insertInCorrectPlace(result, currStr, freq);
-            }
-        }
+        //     // if a vector still has capacity, then add
+        //     if (result->size() < numCompletions) {
+        //         // isnert a current prefix to a result vector
+        //         insertInCorrectPlace(result, currStr, freq);
+        //     }
+        // }
     }
 
     // recursive phase: left -> middle -> right

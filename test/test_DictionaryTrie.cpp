@@ -1,7 +1,7 @@
 /**
  * TODO: File HEADER
  *
- * Author:
+ * Author: Tomoya Tokunaga
  */
 
 #include <algorithm>
