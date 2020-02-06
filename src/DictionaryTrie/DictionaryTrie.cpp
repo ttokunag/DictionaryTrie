@@ -207,6 +207,17 @@ TrieNode* DictionaryTrie::endOfPrefixNode(string prefix, int index,
     }
 }
 
+/*
+ * A helper function for predictCompletions(). This function traverses a
+ * DictionaryTrie and add a word to a prediction vector once this finds a valid
+ * one.
+ *
+ * @param TrieNode*: a reference of a current node
+ * @param string: a partial prediction
+ *  (which will be added more letters as it goes down a trie)
+ * @param vector<pair<string, int>>*: a reference of a vector of pairs
+ * @param int: a maximum size a result vector can be
+ */
 void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
                                       vector<pair<string, int>>* result,
                                       int numCompletions) {
@@ -256,7 +267,13 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
     completionHelper(root->right, prefix, result, numCompletions);
 }
 
-/* TODO */
+/*
+ * Returns a vector of up to numCompletions of words which follows a given
+ * pattern (underscored position will be filled with all possible letters).
+ *
+ * @param string: a pattern this function uses for prediction
+ * @param int: a max size of a result vector can be
+ */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
     // a vector holding up to numCompletions of predictions with frequency
@@ -274,37 +291,48 @@ std::vector<string> DictionaryTrie::predictUnderscores(
     return result;
 }
 
+/*
+ * A helper function for predictUnderscores(). This calls itself recursively
+ * until finding all potential predictions can be derived from a given pattern.
+ *
+ * @param TrieNode*: a reference of a current node
+ * @param string: a partial prediction
+ *  (which will be added more letters as it goes down a trie)
+ * @param vector<pair<string, int>>*: a reference of a vector of pairs
+ * @param string: a pattern this function uses for prediction
+ * @param int: a maximum size a result vector can be
+ */
 void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
                                    vector<pair<string, int>>* vec,
-                                   string prefix, int maxSize) {
+                                   string pattern, int maxSize) {
     // base case:
     // 1. when stepping into an empty node
-    // 2. when a prefix is empty
-    if (node == nullptr || prefix.size() == 0) {
+    // 2. when a pattern is empty
+    if (node == nullptr || pattern.size() == 0) {
         return;
     }
 
-    char headChar = prefix.at(0);
+    char headChar = pattern.at(0);
     char nodeChar = node->getData();
 
     // when a letter being looked for is an underscore
     if (headChar == '_') {
         // cut off the head character ex) "CS_100" -> "S_100"
-        string nextPrefix = prefix.substr(1, prefix.size());
+        string nextPattern = pattern.substr(1, pattern.size());
         // add a current node character to a prediction
         string nextPredict = predict + nodeChar;
 
         // exhaustively search all valid nodes with dfs
-        underscoreRec(node->left, predict, vec, prefix, maxSize);
-        underscoreRec(node->right, predict, vec, prefix, maxSize);
+        underscoreRec(node->left, predict, vec, pattern, maxSize);
+        underscoreRec(node->right, predict, vec, pattern, maxSize);
 
-        // when we're looking at a last letter of a given prefix
-        if (prefix.size() == 1 && node->getFreq() > 0) {
+        // when we're looking at a last letter of a given pattern
+        if (pattern.size() == 1 && node->getFreq() > 0) {
             // add a prediction to a vector
             addPredict(vec, nextPredict, node->getFreq(), maxSize);
         }
 
-        underscoreRec(node->middle, nextPredict, vec, nextPrefix, maxSize);
+        underscoreRec(node->middle, nextPredict, vec, nextPattern, maxSize);
 
     }
     // when a letter being looked for is a specific letter
@@ -317,19 +345,27 @@ void DictionaryTrie::underscoreRec(TrieNode* node, string predict,
             return;
         }
 
-        string nextPrefix = prefix.substr(1, prefix.size());
+        string nextPattern = pattern.substr(1, pattern.size());
         string nextPredict = predict + headChar;
 
-        // when we're looking at a last letter of a given prefix
-        if (prefix.size() == 1 && node->getFreq() > 0) {
+        // when we're looking at a last letter of a given pattern
+        if (pattern.size() == 1 && node->getFreq() > 0) {
             // add a prediction to a vector
             addPredict(vec, nextPredict, node->getFreq(), maxSize);
         }
 
-        underscoreRec(node->middle, nextPredict, vec, nextPrefix, maxSize);
+        underscoreRec(node->middle, nextPredict, vec, nextPattern, maxSize);
     }
 }
 
+/*
+ * Inserts a given string into an appropriate position of a given vector.
+ *
+ * @param vector<pair<string, int>>*: a reference of a vector of pairs
+ * @param string: a prediction to be inserted
+ * @param int: frequency of a given prediction
+ * @param int: a maximum size a result vector can be
+ */
 void DictionaryTrie::addPredict(vector<pair<string, int>>* vec, string predict,
                                 int freq, int maxSize) {
     // when a vector is empty --> safe to add a new prediction
@@ -378,6 +414,12 @@ void DictionaryTrie::addPredict(vector<pair<string, int>>* vec, string predict,
     }
 }
 
+/*
+ * Finds a node which contains a given character
+ *
+ * @param TrieNode*: a reference of a current node
+ * @param char: a character we're looking for
+ */
 TrieNode* DictionaryTrie::findNode(TrieNode* node, char c) {
     // base case:
     // 1. when a null pointer is passed --> return nullptr
@@ -397,12 +439,19 @@ TrieNode* DictionaryTrie::findNode(TrieNode* node, char c) {
     }
 }
 
-/* TODO */
+/*
+ * Destructor of a DictionaryTrie
+ */
 DictionaryTrie::~DictionaryTrie() {
     deleteAll(root);
     delete root;
 }
 
+/*
+ * Free all memory which is related a given node
+ *
+ * @param TrieNode*: a root node of a DictionaryTrie we want to deconstruct
+ */
 void DictionaryTrie::deleteAll(TrieNode* node) {
     // base case when a node is nothing
     if (node == nullptr) {
@@ -420,6 +469,14 @@ void DictionaryTrie::deleteAll(TrieNode* node) {
     delete node->right;
 }
 
+/*
+ * A helper function which repeatedly add new nodes which contains each
+ * character of a given word to a middle of a given node
+ *
+ * @param string: a word we want to add
+ * @param int: an index of a current letter of a given word
+ * @param TrieNode*: a reference of a current node
+ */
 TrieNode* DictionaryTrie::createMiddleLine(string str, int index,
                                            TrieNode* node) {
     for (int i = index; i < str.size(); i++) {
@@ -431,6 +488,9 @@ TrieNode* DictionaryTrie::createMiddleLine(string str, int index,
     return node;
 }
 
+/*
+ * Returns a root of this DictionaryTrie
+ */
 TrieNode* DictionaryTrie::getRoot() { return root; }
 
 void DictionaryTrie::insertInCorrectPlace(vector<pair<string, int>>* pairs,
@@ -461,6 +521,16 @@ void DictionaryTrie::insertInCorrectPlace(vector<pair<string, int>>* pairs,
     }
 }
 
+/*
+ * Adds a new node to a given node
+ *
+ * @param TrieNode*: a reference of a current node
+ * @param int: flag to decide which child a new node added to (left,right,
+ * middle)
+ * @param string: a word to be added
+ * @param int: frequency of a given word
+ * @param int: an index of a current letter of a given word
+ */
 int DictionaryTrie::addNewNodes(TrieNode* node, int flag, string word, int freq,
                                 int letterIndex) {
     switch (flag) {
