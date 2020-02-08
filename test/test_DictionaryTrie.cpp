@@ -1,5 +1,5 @@
 /**
- * TODO: File HEADER
+ * This is a unit tester for a DictionaryTrie method
  *
  * Author: Tomoya Tokunaga
  */
@@ -24,7 +24,7 @@ TEST(DictTrieTests, EMPTY_TEST) {
     ASSERT_EQ(dict.find("abrakadabra"), false);
 }
 
-/* TODO */
+// test for insert()
 TEST(DictTrieTests, INSERT_TEST) {
     DictionaryTrie dict;
 
@@ -40,6 +40,7 @@ TEST(DictTrieTests, INSERT_TEST) {
     ASSERT_EQ(dict.insert("book", 2), false);
 }
 
+// test for insert() and find()
 TEST(DictTrieTests, FULL_TEST) {
     DictionaryTrie dict;
 
@@ -67,6 +68,7 @@ TEST(DictTrieTests, FULL_TEST) {
     ASSERT_EQ(dict.find("pa"), false);
 }
 
+// test for find()
 TEST(DictTrieTests, FIND_TEST) {
     DictionaryTrie dict;
 
@@ -83,6 +85,7 @@ TEST(DictTrieTests, FIND_TEST) {
     ASSERT_EQ(dict.find("app"), false);
 }
 
+// test for predictCompletion()
 TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     DictionaryTrie dict;
     dict.insert("apple", 143);
@@ -100,6 +103,7 @@ TEST(DictTrieTests, DFS_PREDICT_COMPLETION_TEST) {
     vector<string> test = dict.predictCompletions("and", 3);
 }
 
+// test for endOfPrefixNode()
 TEST(DictTrieTests, END_OF_PREFIX_TEST) {
     DictionaryTrie dict;
     dict.insert("apple", 143);
@@ -114,6 +118,7 @@ TEST(DictTrieTests, END_OF_PREFIX_TEST) {
     ASSERT_EQ(apNode->getData(), 'p');
 }
 
+// test for predictUnderscores()
 TEST(DictTrieTests, UNDERSCORE_TEST) {
     DictionaryTrie dict;
 

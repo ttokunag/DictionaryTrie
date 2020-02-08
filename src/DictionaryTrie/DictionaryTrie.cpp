@@ -148,25 +148,17 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 
     TrieNode* lastPrefixNode = endOfPrefixNode(prefix, 0, root);
 
+    // a node which is used as a root for searching
     if (lastPrefixNode == nullptr) {
         return {};
     }
 
+    // include a given prefix in a prediction if it's counted
     if (lastPrefixNode->getFreq() > 0) {
         predictions.push_back(
             pair<string, int>(prefix, lastPrefixNode->getFreq()));
     }
 
-    // include a given prefix in a prediction if it's counted
-    // if (lastPrefixNode != nullptr && lastPrefixNode->getFreq() > 0) {
-    //     predictions.push_back(
-    //         pair<string, int>(prefix, lastPrefixNode->getFreq()));
-    // }
-
-    // // a node which is used as a root for searching
-    // if (lastPrefixNode == nullptr) {
-    //     return {};
-    // }
     TrieNode* dfsRoot = (prefix.size() != 0) ? lastPrefixNode->middle : root;
     // DFS to find most frequent words
     completionHelper(dfsRoot, prefix, &predictions, numCompletions);
@@ -243,34 +235,33 @@ void DictionaryTrie::completionHelper(TrieNode* root, string prefix,
     // nodes whose frequency is higher than a minimum frequency should be added
     // to a result vector
     if (freq > 0) {
-        addPredict(result, prefix + letter, freq, numCompletions);
-        // // a current size of the result vector
-        // int size = result->size();
-        // string currStr = prefix + letter;
+        // a current size of the result vector
+        int size = result->size();
+        string currStr = prefix + letter;
 
-        // // a node should be added when a vector is empty
-        // if (size == 0) {
-        //     result->push_back(pair<string, int>(currStr, freq));
-        // }
-        // // whenever a vecter is nonempty
-        // else {
-        //     // remove the least frequent word if a vector is full
-        //     if (size == numCompletions) {
-        //         pair<string, int> last = result->at(size - 1);
+        // a node should be added when a vector is empty
+        if (size == 0) {
+            result->push_back(pair<string, int>(currStr, freq));
+        }
+        // whenever a vecter is nonempty
+        else {
+            // remove the least frequent word if a vector is full
+            if (size == numCompletions) {
+                pair<string, int> last = result->at(size - 1);
 
-        //         // when a current prefix is more or equal to frequent
-        //         if (freq > last.second ||
-        //             (freq == last.second && currStr < last.first)) {
-        //             result->pop_back();
-        //         }
-        //     }
+                // when a current prefix is more or equal to frequent
+                if (freq > last.second ||
+                    (freq == last.second && currStr < last.first)) {
+                    result->pop_back();
+                }
+            }
 
-        //     // if a vector still has capacity, then add
-        //     if (result->size() < numCompletions) {
-        //         // isnert a current prefix to a result vector
-        //         insertInCorrectPlace(result, currStr, freq);
-        //     }
-        // }
+            // if a vector still has capacity, then add
+            if (result->size() < numCompletions) {
+                // isnert a current prefix to a result vector
+                insertInCorrectPlace(result, currStr, freq);
+            }
+        }
     }
 
     // recursive phase: left -> middle -> right
@@ -505,6 +496,15 @@ TrieNode* DictionaryTrie::createMiddleLine(string str, int index,
  */
 TrieNode* DictionaryTrie::getRoot() { return root; }
 
+/*
+ * A helper function which add a new string integer pair into a given vector. An
+ * insertion place of a new pair is determined by the alphabetical order of a
+ * given string and its frequency
+ *
+ * @param vector<pair<string, int>>*: a vector of pairs of string and int
+ * @param string: a word for a new pair
+ * @param int: frequency of a given word
+ */
 void DictionaryTrie::insertInCorrectPlace(vector<pair<string, int>>* pairs,
                                           string word, int freq) {
     int vecSize = pairs->size();
